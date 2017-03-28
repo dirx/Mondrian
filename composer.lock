@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa5d5fa211474b036d01508446380655",
+    "content-hash": "5a63a3f587a118e9e9cd2f9447e727c5",
     "packages": [
         {
             "name": "alom/graphviz",
@@ -2730,7 +2730,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5"
+        "php": ">=5.6"
     },
     "platform-dev": []
 }

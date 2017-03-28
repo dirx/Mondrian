@@ -1,4 +1,5 @@
 language: php
+
 php:
   - 5.4
   - 5.5
@@ -8,4 +9,15 @@ php:
 
 before_script:
   - composer --dev install
+  - |
+    if [ $TRAVIS_PHP_VERSION = '7.0' ]; then
+      PHPUNIT_FLAGS="--coverage-clover=coverage.clover"
+    fi
+
+after_script:
+  - |
+    if [ $TRAVIS_PHP_VERSION = '7.0' ]; then
+      travis_retry wget https://scrutinizer-ci.com/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+    fi
 
