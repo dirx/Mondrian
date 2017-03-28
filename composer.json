@@ -37,5 +37,9 @@
         "plugins": [
             "Trismegiste\\Mondrian\\Plugin\\About"
         ]
+    },
+    "scripts": {
+        "tests": "vendor/bin/phpunit",
+        "build": "vendor/bin/box build"
     }
 }
