@@ -12,6 +12,9 @@ before_script:
       PHPUNIT_FLAGS="--coverage-clover=coverage.clover"
     fi
 
+script:
+  - vendor/bin/phpunit --verbose $PHPUNIT_FLAGS -
+
 after_script:
   - |
     if [ $TRAVIS_PHP_VERSION = '7.0' ]; then
