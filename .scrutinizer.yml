@@ -3,4 +3,4 @@ imports:
 
 tools:
     external_code_coverage:
-        timeout: 2000 # seconds
+        timeout: 600 # wait seconds since push
