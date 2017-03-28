@@ -7,6 +7,7 @@
 namespace Trismegiste\Mondrian\Analysis;
 
 use Trismegiste\Mondrian\Graph\BreadthFirstSearch;
+use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
@@ -59,7 +60,7 @@ class HiddenCoupling extends BreadthFirstSearch implements Generator
      */
     public function createReducedGraph()
     {
-        $reducedGraph = new \Trismegiste\Mondrian\Graph\Digraph();
+        $reducedGraph = new Digraph();
         $dependency = $this->getEdgeSet();
         foreach ($dependency as $edge) {
             if (($edge->getSource() instanceof ImplVertex) &&

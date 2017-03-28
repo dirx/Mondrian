@@ -18,8 +18,8 @@ abstract class TraitUserHelper extends ObjectLevelHelper
     /**
      * Adds an edge from a class|trait toward a trait
      *
-     * @param \PhpParser\Node\Stmt\TraitUse $node
-     * @param \Trismegiste\Mondrian\Graph\Vertex $source
+     * @param Stmt\TraitUse $node
+     * @param Vertex $source
      */
     protected function enterTraitUse(Stmt\TraitUse $node, Vertex $source)
     {

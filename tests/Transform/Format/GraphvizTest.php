@@ -39,7 +39,7 @@ class GraphvizTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new \Alom\Graphviz\Subgraph('a')));
 
         $exporter = new Graphviz($graph);
-        $exporter = $this->getMockBuilder('Trismegiste\Mondrian\Transform\Format\Graphviz')
+        $exporter = $this->getMockBuilder(Graphviz::class)
             ->setMethods(['createGraphVizDot'])
             ->setConstructorArgs([$graph])
             ->getMock();

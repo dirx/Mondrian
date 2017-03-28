@@ -24,7 +24,7 @@ class GraphContext
      * Build the context
      *
      * @param array $cfg the config
-     * @param \Trismegiste\Mondrian\Transform\Logger\LoggerInterface $log a logger
+     * @param LoggerInterface $log a logger
      *
      * @throws \InvalidArgumentException if config is invalid
      */

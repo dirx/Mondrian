@@ -8,6 +8,7 @@ namespace Trismegiste\Mondrian\Tests\Transform;
 
 use Trismegiste\Mondrian\Graph\Vertex;
 use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\Logger\LoggerInterface;
 
 /**
  * GraphContextTest tests for vertex mapping Context
@@ -25,7 +26,7 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
     public function getVertexMock()
     {
         foreach (['class', 'interface', 'impl', 'method', 'param', 'trait'] as $pool) {
-            $v[] = [$pool, $this->getMockBuilder('Trismegiste\Mondrian\Graph\Vertex')
+            $v[] = [$pool, $this->getMockBuilder(Vertex::class)
                 ->disableOriginalConstructor()
                 ->getMock()];
         }
@@ -35,7 +36,7 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
 
     protected function getLoggerMock()
     {
-        return $this->createMock('Trismegiste\Mondrian\Transform\Logger\LoggerInterface');
+        return $this->createMock(LoggerInterface::class);
     }
 
     /**
@@ -68,7 +69,7 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
 
     public function testFindMethodByName()
     {
-        $v = $this->getMockBuilder('Trismegiste\Mondrian\Graph\Vertex')
+        $v = $this->getMockBuilder(Vertex::class)
             ->setMethods(['getName'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -81,7 +82,7 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testBadConfig()
     {

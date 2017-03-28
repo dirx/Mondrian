@@ -7,10 +7,7 @@
 namespace Trismegiste\Mondrian\Visitor;
 
 use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
-use PhpParser\Node\Stmt\Trait_;
+use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Refactor\Refactored;
 
 /**
@@ -31,7 +28,7 @@ class NewContractCollector extends PublicCollector
     /**
      * {@inheritDoc}
      */
-    protected function enterClassNode(Class_ $node)
+    protected function enterClassNode(Stmt\Class_ $node)
     {
         $this->extractAnnotation($node);
         if ($node->hasAttribute('contractor')) {
@@ -45,7 +42,7 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterInterfaceNode(Interface_ $node)
+    protected function enterInterfaceNode(Stmt\Interface_ $node)
     {
 
     }
@@ -53,7 +50,7 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterPublicMethodNode(ClassMethod $node)
+    protected function enterPublicMethodNode(Stmt\ClassMethod $node)
     {
 
     }
@@ -61,7 +58,7 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterTraitNode(Trait_ $node)
+    protected function enterTraitNode(Stmt\Trait_ $node)
     {
 
     }

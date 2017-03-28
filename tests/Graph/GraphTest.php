@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Tests\Graph;
 
+use Trismegiste\Mondrian\Graph\Edge;
 use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
@@ -62,13 +63,13 @@ abstract class GraphTest extends \PHPUnit_Framework_TestCase
         $set = $this->graph->getEdgeSet();
         $this->assertCount($eCard, $set);
         foreach ($set as $item) {
-            $this->assertInstanceOf('Trismegiste\Mondrian\Graph\Edge', $item);
+            $this->assertInstanceOf(Edge::class, $item);
         }
 
         $set = $this->graph->getVertexSet();
         $this->assertCount($vCard, $set);
         foreach ($set as $item) {
-            $this->assertInstanceOf('Trismegiste\Mondrian\Graph\Vertex', $item);
+            $this->assertInstanceOf(Vertex::class, $item);
         }
     }
 

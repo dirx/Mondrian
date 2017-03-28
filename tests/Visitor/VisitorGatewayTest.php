@@ -6,6 +6,11 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor;
 
+use PhpParser\Node;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
+use Trismegiste\Mondrian\Visitor\State\State;
 use Trismegiste\Mondrian\Visitor\VisitorGateway;
 
 /**
@@ -34,7 +39,7 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function getMockState($key)
     {
-        $state = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state = $this->createMock(State::class);
         $state->expects($this->any())
             ->method('getName')
             ->will($this->returnValue($key));
@@ -44,11 +49,11 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->reflectionCtx = $this->createMock('Trismegiste\Mondrian\Transform\ReflectionContext');
-        $this->graphCtx = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
+        $this->reflectionCtx = $this->createMock(ReflectionContext::class);
+        $this->graphCtx = $this->getMockBuilder(GraphContext::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->graph = $this->createMock('Trismegiste\Mondrian\Graph\Graph');
+        $this->graph = $this->createMock(Graph::class);
     }
 
     /**
@@ -69,14 +74,14 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function testStateKey()
     {
-        $state0 = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state0 = $this->createMock(State::class);
         $state0->expects($this->exactly(2))
             ->method('getName')
             ->will($this->returnValue('key0'));
         $state0->expects($this->once())
             ->method('setContext');
 
-        $state1 = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state1 = $this->createMock(State::class);
         $state1->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('key1'));
@@ -92,14 +97,14 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
         $state->expects($this->once())
             ->method('enter');
         $this->buildVisitor([$state]);
-        $node = $this->createMock('PhpParser\Node');
+        $node = $this->createMock(Node::class);
         $this->sut->enterNode($node);
     }
 
     public function testGetState()
     {
         $this->buildVisitorUnique();
-        $this->assertInstanceOf('Trismegiste\Mondrian\Visitor\State\State', $this->sut->getState('key'));
+        $this->assertInstanceOf(State::class, $this->sut->getState('key'));
     }
 
     /**
@@ -128,9 +133,9 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
         ];
         $this->buildVisitor($listing);
         $node = [
-            $this->createMock('PhpParser\Node'),
-            $this->createMock('PhpParser\Node'),
-            $this->createMock('PhpParser\Node'),
+            $this->createMock(Node::class),
+            $this->createMock(Node::class),
+            $this->createMock(Node::class),
         ];
 
         $this->assertNull($this->sut->getNodeFor('one'));

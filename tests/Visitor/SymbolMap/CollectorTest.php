@@ -11,8 +11,10 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser\Multiple;
 use PhpParser\Parser\Php5;
 use PhpParser\Parser\Php7;
+use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Parser\PackageParser;
 use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
+use Trismegiste\Mondrian\Transform\GraphContext;
 use Trismegiste\Mondrian\Transform\ReflectionContext;
 use Trismegiste\Mondrian\Visitor\SymbolMap\Collector;
 
@@ -31,10 +33,10 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->context = new ReflectionContext();
-        $mockGraphCtx = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
+        $mockGraphCtx = $this->getMockBuilder(GraphContext::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockGraph = $this->createMock('Trismegiste\Mondrian\Graph\Graph');
+        $mockGraph = $this->createMock(Graph::class);
         $this->visitor = new Collector($this->context, $mockGraphCtx, $mockGraph);
         $this->parser = new PackageParser(
             new Multiple([

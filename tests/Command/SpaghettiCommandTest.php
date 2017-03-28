@@ -26,7 +26,7 @@ class SpaghettiCommandTest extends TestTemplate
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage loose is not a valid strategy
      */
     public function testBadParameter()

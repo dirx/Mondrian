@@ -38,7 +38,7 @@ class RefactoredTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testNameCollision()
     {

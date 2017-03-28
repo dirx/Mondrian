@@ -7,6 +7,10 @@
 namespace Trismegiste\Mondrian\Visitor\State;
 
 use PhpParser\Node;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Graph\Vertex;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
 
 /**
  * AbstractState is a abstract state
@@ -34,7 +38,7 @@ abstract class AbstractState implements State
     }
 
     /**
-     * @return \Trismegiste\Mondrian\Transform\ReflectionContext
+     * @return ReflectionContext
      */
     protected function getReflectionContext()
     {
@@ -42,7 +46,7 @@ abstract class AbstractState implements State
     }
 
     /**
-     * @return \Trismegiste\Mondrian\Transform\GraphContext
+     * @return GraphContext
      */
     protected function getGraphContext()
     {
@@ -50,7 +54,7 @@ abstract class AbstractState implements State
     }
 
     /**
-     * @return \Trismegiste\Mondrian\Graph\Graph
+     * @return Graph
      */
     protected function getGraph()
     {
@@ -63,7 +67,7 @@ abstract class AbstractState implements State
      * @param string $type trait|class|interface|param|method|impl
      * @param string $key the key for this vertex
      *
-     * @return \Trismegiste\Mondrian\Graph\Vertex
+     * @return Vertex
      */
     protected function findVertex($type, $key)
     {

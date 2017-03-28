@@ -7,8 +7,10 @@
 namespace Trismegiste\Mondrian\Tests\Transform\BuildGraph;
 
 use Trismegiste\Mondrian\Builder\Compiler\Director;
+use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Parser\BuilderFactory;
 use Trismegiste\Mondrian\Transform\GraphBuilder;
+use Trismegiste\Mondrian\Transform\Logger\LoggerInterface;
 
 /**
  * GraphBuilderTestCase is a generic test for the builder compiler
@@ -24,8 +26,8 @@ abstract class GraphBuilderTestCase extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $conf = ['calling' => []];
-        $this->graph = $this->createMock('Trismegiste\Mondrian\Graph\Graph');
-        $this->logger = $this->createMock('Trismegiste\Mondrian\Transform\Logger\LoggerInterface');
+        $this->graph = $this->createMock(Graph::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->builder = new GraphBuilder($conf, $this->graph, $this->logger);
         $this->director = new Director($this->builder);
     }

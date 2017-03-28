@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Tests\Builder\Statement;
 
+use Trismegiste\Mondrian\Builder\Statement\BuilderInterface;
 use Trismegiste\Mondrian\Builder\Statement\Director;
 
 /**
@@ -21,7 +22,7 @@ class DirectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->builder = $this->createMock('Trismegiste\Mondrian\Builder\Statement\BuilderInterface');
+        $this->builder = $this->createMock(BuilderInterface::class);
         $this->director = new Director($this->builder);
     }
 

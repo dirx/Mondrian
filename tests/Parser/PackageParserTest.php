@@ -9,6 +9,7 @@ namespace Trismegiste\Mondrian\Tests\Parser;
 use PhpParser\Parser\Php7;
 use Trismegiste\Mondrian\Parser\PackageParser;
 use Trismegiste\Mondrian\Parser\PhpFile;
+use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
 
 /**
  * PackageParserTest tests a parser of Package
@@ -21,7 +22,7 @@ class PackageParserTest extends \PHPUnit_Framework_TestCase
 
     public function getListing()
     {
-        return [[[new \Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo('abc', 'dummy')]]];
+        return [[[new MockSplFileInfo('abc', 'dummy')]]];
     }
 
     /**

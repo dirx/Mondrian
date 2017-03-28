@@ -12,6 +12,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeTraverser;
 use PhpParser\PrettyPrinter\Standard;
+use Trismegiste\Mondrian\Parser\PhpFile;
 use Trismegiste\Mondrian\Parser\PhpPersistence;
 use Trismegiste\Mondrian\Visitor\NewInstanceRefactor;
 
@@ -37,7 +38,7 @@ class NewInstanceRefactorTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $file = new \Trismegiste\Mondrian\Parser\PhpFile('/I/Am/Victory.php', [
+        $file = new PhpFile('/I/Am/Victory.php', [
             $classNode,
         ]);
 

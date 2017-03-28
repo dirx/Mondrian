@@ -17,7 +17,9 @@ class PhpFile extends NodeAbstract
 {
     protected $absPathName;
 
-    /** @var Node[] Statements */
+    /**
+     * @var Node[] Statements
+     */
     public $stmts;
 
     public function __construct($path, array $stmts, $newFile = false)

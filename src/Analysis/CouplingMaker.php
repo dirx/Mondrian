@@ -7,6 +7,7 @@
 namespace Trismegiste\Mondrian\Analysis;
 
 use Trismegiste\Mondrian\Graph\Algorithm;
+use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
 use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
@@ -26,7 +27,7 @@ class CouplingMaker extends Algorithm implements Generator
 
     public function createReducedGraph()
     {
-        $reduced = new \Trismegiste\Mondrian\Graph\Digraph();
+        $reduced = new Digraph();
         foreach ($this->getEdgeSet() as $declaring) {
             // we search for methods declared in interfaces
             if (($declaring->getSource() instanceof InterfaceVertex)

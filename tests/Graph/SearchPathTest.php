@@ -7,6 +7,7 @@
 namespace Trismegiste\Mondrian\Tests\Graph;
 
 use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Edge;
 use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
@@ -36,7 +37,7 @@ abstract class SearchPathTest extends \PHPUnit_Framework_TestCase
         $this->graph->addEdge($v1, $v2);
         $path = $this->graph->searchPath($v1, $v2);
         $this->assertCount(1, $path);
-        $this->assertInstanceOf('Trismegiste\Mondrian\Graph\Edge', $path[0]);
+        $this->assertInstanceOf(Edge::class, $path[0]);
         $this->assertEquals(1, $path[0]->getSource()->getName());
         $this->assertEquals(2, $path[0]->getTarget()->getName());
     }
@@ -58,7 +59,7 @@ abstract class SearchPathTest extends \PHPUnit_Framework_TestCase
         $path = $this->graph->searchPath($vSet[0], $vSet[$card - 1]);
         $this->assertCount($card - 1, $path);
         foreach ($path as $idx => $step) {
-            $this->assertInstanceOf('Trismegiste\Mondrian\Graph\Edge', $step);
+            $this->assertInstanceOf(Edge::class, $step);
             $this->assertEquals($vSet[$idx], $step->getSource());
             $this->assertEquals($vSet[$idx + 1], $step->getTarget());
         }

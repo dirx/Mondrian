@@ -6,6 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Transform\Vertex;
 
+use Trismegiste\Mondrian\Transform\Vertex\StaticAnalysis;
+
 /**
  * StaticAnalysisTest is a test for StaticAnalysis vertex superclass
  */
@@ -17,7 +19,7 @@ class StaticAnalysisTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->vertex = $this
-            ->getMockForAbstractClass('Trismegiste\Mondrian\Transform\Vertex\StaticAnalysis', ['a']);
+            ->getMockForAbstractClass(StaticAnalysis::class, ['a']);
         $this->vertex->expects($this->any())
             ->method('getSpecific')
             ->will($this->returnValue([]));

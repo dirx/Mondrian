@@ -15,7 +15,7 @@ class PhpDumper extends PhpPersistence
     /**
      * Write the file
      *
-     * @param \Trismegiste\Mondrian\Parser\PhpFile $aFile
+     * @param PhpFile $aFile
      */
     public function write(PhpFile $aFile)
     {

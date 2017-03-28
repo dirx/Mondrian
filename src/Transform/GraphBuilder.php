@@ -30,8 +30,8 @@ class GraphBuilder extends AbstractTraverser
      * Injecting the external in/out parameters
      *
      * @param array $cfg
-     * @param \Trismegiste\Mondrian\Graph\Graph $g
-     * @param \Trismegiste\Mondrian\Transform\Logger\LoggerInterface $log
+     * @param Graph $g
+     * @param LoggerInterface $log
      */
     public function __construct(array $cfg, Graph $g, LoggerInterface $log)
     {

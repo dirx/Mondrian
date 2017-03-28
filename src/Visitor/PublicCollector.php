@@ -8,10 +8,6 @@ namespace Trismegiste\Mondrian\Visitor;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
-use PhpParser\Node\Stmt\Trait_;
 
 /**
  * PublicCollector is an abstract node collector for public "things" of types
@@ -26,30 +22,30 @@ abstract class PublicCollector extends FqcnHelper
     /**
      * Visits a class node
      *
-     * @param Class_ $node
+     * @param Stmt\Class_ $node
      */
-    abstract protected function enterClassNode(Class_ $node);
+    abstract protected function enterClassNode(Stmt\Class_ $node);
 
     /**
      * Visits an interface node
      *
-     * @param Interface_ $node
+     * @param Stmt\Interface_ $node
      */
-    abstract protected function enterInterfaceNode(Interface_ $node);
+    abstract protected function enterInterfaceNode(Stmt\Interface_ $node);
 
     /**
      * Visits an trait node
      *
-     * @param Trait_ $node
+     * @param Stmt\Trait_ $node
      */
-    abstract protected function enterTraitNode(Trait_ $node);
+    abstract protected function enterTraitNode(Stmt\Trait_ $node);
 
     /**
      * Visits a public method node
      *
-     * @param ClassMethod $node
+     * @param Stmt\ClassMethod $node
      */
-    abstract protected function enterPublicMethodNode(ClassMethod $node);
+    abstract protected function enterPublicMethodNode(Stmt\ClassMethod $node);
 
     /**
      * {@inheritDoc}

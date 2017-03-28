@@ -7,7 +7,7 @@
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use Trismegiste\Mondrian\Visitor\State\AbstractState;
 
@@ -49,9 +49,9 @@ abstract class MethodLevelHelper extends AbstractState
      * Links the current implementation vertex to all methods with the same
      * name. Filters on some obvious cases.
      *
-     * @param Node\Expr\MethodCall $node
+     * @param Expr\MethodCall $node
      */
-    protected function enterMethodCall(Node\Expr\MethodCall $node)
+    protected function enterMethodCall(Expr\MethodCall $node)
     {
         if (is_string($node->name)) {
             $this->enterNonDynamicMethodCall($node);
@@ -64,9 +64,9 @@ abstract class MethodLevelHelper extends AbstractState
      * Do not process : call_user_func(array($obj, 'getThing'), $arg);
      * Do not process : $reflectionMethod->invoke($obj, 'getThing', $arg);
      *
-     * @param Node\Expr\MethodCall $node
+     * @param Expr\MethodCall $node
      */
-    protected function enterNonDynamicMethodCall(Node\Expr\MethodCall $node)
+    protected function enterNonDynamicMethodCall(Expr\MethodCall $node)
     {
         $method = $node->name;
         $candidate = null;
@@ -159,9 +159,9 @@ abstract class MethodLevelHelper extends AbstractState
      * Add an edge from current implementation to the class which a new instance
      * is created
      *
-     * @param New_ $node
+     * @param Expr\New_ $node
      */
-    protected function enterNewInstance(New_ $node)
+    protected function enterNewInstance(Expr\New_ $node)
     {
         if ($node->class instanceof Name) {
             $classVertex = $this->findVertex('class', (string)$this->fileState->resolveClassName($node->class));
@@ -172,7 +172,7 @@ abstract class MethodLevelHelper extends AbstractState
         }
     }
 
-    protected function enterStaticCall(Node\Expr\StaticCall $node)
+    protected function enterStaticCall(Expr\StaticCall $node)
     {
         if (($node->class instanceof Name) && is_string($node->name)) {
             $impl = $this->findVertex('impl', $this->currentFqcn . '::' . $this->currentMethodNode->name);

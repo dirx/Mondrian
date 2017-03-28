@@ -6,7 +6,6 @@
 
 namespace Trismegiste\Mondrian\Visitor\Vertex;
 
-use PhpParser\Node;
 use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;

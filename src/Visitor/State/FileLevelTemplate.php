@@ -10,9 +10,7 @@ use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Interface_;
-use PhpParser\Node\Stmt\Trait_;
+use PhpParser\Node\Stmt;
 
 /**
  * FileLevelTemplate is Template Method DP for a FileLevel state
@@ -80,17 +78,17 @@ abstract class FileLevelTemplate extends AbstractState
     /**
      * Enters in a class node
      */
-    abstract protected function enterClassNode(Class_ $node);
+    abstract protected function enterClassNode(Stmt\Class_ $node);
 
     /**
      * Enters in a trait node
      */
-    abstract protected function enterTraitNode(Trait_ $node);
+    abstract protected function enterTraitNode(Stmt\Trait_ $node);
 
     /**
      * Enters in an interface node
      */
-    abstract protected function enterInterfaceNode(Interface_ $node);
+    abstract protected function enterInterfaceNode(Stmt\Interface_ $node);
 
     /**
      * resolve the Name with current namespace and alias

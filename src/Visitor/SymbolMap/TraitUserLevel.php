@@ -6,7 +6,7 @@
 
 namespace Trismegiste\Mondrian\Visitor\SymbolMap;
 
-use PhpParser\Node;
+use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Visitor\State\AbstractObjectLevel;
 
 /**
@@ -15,7 +15,7 @@ use Trismegiste\Mondrian\Visitor\State\AbstractObjectLevel;
 abstract class TraitUserLevel extends AbstractObjectLevel
 {
 
-    protected function importSignatureTrait(Node\Stmt\TraitUse $node)
+    protected function importSignatureTrait(Stmt\TraitUse $node)
     {
         $fileState = $this->context->getState('file');
         $fqcn = $this->getCurrentFqcn();

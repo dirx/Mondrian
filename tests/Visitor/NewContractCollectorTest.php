@@ -11,6 +11,8 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\NodeTraverser;
+use Trismegiste\Mondrian\Parser\PhpFile;
+use Trismegiste\Mondrian\Refactor\Refactored;
 use Trismegiste\Mondrian\Visitor\NewContractCollector;
 
 /**
@@ -24,14 +26,14 @@ class NewContractCollectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->context = $this->getMockBuilder('Trismegiste\Mondrian\Refactor\Refactored')
+        $this->context = $this->getMockBuilder(Refactored::class)
             ->getMock();
         $this->visitor = new NewContractCollector($this->context);
     }
 
     protected function buildFileNode()
     {
-        $node[] = new \Trismegiste\Mondrian\Parser\PhpFile('/I/Am/Victory.php', []);
+        $node[] = new PhpFile('/I/Am/Victory.php', []);
         $node[] = new Class_('Victory');
 
         return $node;
@@ -96,7 +98,7 @@ class NewContractCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testWithTraverser()
     {
-        $file = new \Trismegiste\Mondrian\Parser\PhpFile('/I/Am/Victory.php', [
+        $file = new PhpFile('/I/Am/Victory.php', [
             new Class_('Victory', [], [
                 'comments' => [
                     new Comment('@mondrian contractor SomeNewContract'),

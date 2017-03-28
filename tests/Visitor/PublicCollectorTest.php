@@ -10,6 +10,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Trait_;
+use Trismegiste\Mondrian\Visitor\PublicCollector;
 
 /**
  * PublicCollectorTest tests for PublicCollector visitor
@@ -88,7 +89,7 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->visitor = $this->getMockForAbstractClass('Trismegiste\Mondrian\Visitor\PublicCollector');
+        $this->visitor = $this->getMockForAbstractClass(PublicCollector::class);
     }
 
 }

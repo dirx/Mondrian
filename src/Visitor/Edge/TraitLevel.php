@@ -7,6 +7,7 @@
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt;
 
 /**
  * TraitLevel is ...
@@ -38,7 +39,7 @@ class TraitLevel extends TraitUserHelper
         return 'trait';
     }
 
-    protected function enterPublicMethod(Node\Stmt\ClassMethod $node)
+    protected function enterPublicMethod(Stmt\ClassMethod $node)
     {
         // NS
         $methodName = $node->name;

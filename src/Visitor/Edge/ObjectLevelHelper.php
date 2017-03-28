@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
+use PhpParser\Node;
 use PhpParser\Node\Param;
 use Trismegiste\Mondrian\Graph\Vertex;
 use Trismegiste\Mondrian\Transform\Vertex\ParamVertex;
@@ -38,7 +39,7 @@ abstract class ObjectLevelHelper extends AbstractObjectLevel
 
     protected function typeHintParam(Param $param, ParamVertex $source)
     {
-        if ($param->type instanceof \PhpParser\Node\Name) {
+        if ($param->type instanceof Node\Name) {
             $paramType = (string)$this->context->getState('file')->resolveClassName($param->type);
             // there is a type, we add a link to the type, if it is found
             $typeVertex = $this->findTypeVertex($paramType);

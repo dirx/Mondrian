@@ -7,10 +7,8 @@
 namespace Trismegiste\Mondrian\Parser;
 
 use PhpParser\BuilderAbstract;
-use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
-use PhpParser\Node\Stmt\UseUse;
+use PhpParser\Node;
+use PhpParser\Node\Stmt;
 
 /**
  * PhpFileBuilder is a builder for a PhpFile node :
@@ -48,9 +46,9 @@ class PhpFileBuilder extends BuilderAbstract
     /**
      * Declares a class or an interface
      *
-     * @param mixed $stmt a Node_Stmt or a Node_Builder
+     * @param Node|Builder
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return PhpFileBuilder this instance
      *
      * @throws \InvalidArgumentException
      */
@@ -71,12 +69,12 @@ class PhpFileBuilder extends BuilderAbstract
      *
      * @param string $str
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return $this
      */
     public function ns($str)
     {
-        $this->fileNamespace = new Namespace_(
-            new Name((string)$str));
+        $this->fileNamespace = new Stmt\Namespace_(
+            new Node\Name((string)$str));
 
         return $this;
     }
@@ -86,14 +84,14 @@ class PhpFileBuilder extends BuilderAbstract
      *
      * @param string $str
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return $this
      */
     public function addUse($str)
     {
-        $this->useList[] = new Use_(
+        $this->useList[] = new Stmt\Use_(
             [
-                new UseUse(
-                    new Name(
+                new Stmt\UseUse(
+                    new Node\Name(
                         (string)$str))]);
 
         return $this;

@@ -102,7 +102,7 @@ class TypeHintConfig extends Command
     /**
      * Dump the config
      *
-     * @param \Trismegiste\Mondrian\Transform\Logger\GraphLogger $logger
+     * @param GraphLogger $logger
      */
     protected function writeConfig(GraphLogger $logger)
     {

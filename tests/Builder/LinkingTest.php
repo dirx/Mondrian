@@ -6,7 +6,9 @@
 
 namespace Trismegiste\Mondrian\Tests\Builder;
 
+use Trismegiste\Mondrian\Builder\Compiler;
 use Trismegiste\Mondrian\Builder\Linking;
+use Trismegiste\Mondrian\Builder\Statement;
 
 /**
  * LinkingTest tests the facade for compilers
@@ -20,8 +22,8 @@ class LinkingTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->parser = $this->createMock('Trismegiste\Mondrian\Builder\Statement\BuilderInterface');
-        $this->compiler = $this->createMock('Trismegiste\Mondrian\Builder\Compiler\BuilderInterface');
+        $this->parser = $this->createMock(Statement\BuilderInterface::class);
+        $this->compiler = $this->createMock(Compiler\BuilderInterface::class);
         $this->facade = new Linking($this->parser, $this->compiler);
     }
 

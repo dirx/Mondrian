@@ -7,6 +7,9 @@
 namespace Trismegiste\Mondrian\Visitor\State;
 
 use PhpParser\Node;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
 
 /**
  * VisitorContext is a contract for a context of State Pattern
@@ -38,17 +41,17 @@ interface VisitorContext
     public function getState($stateKey);
 
     /**
-     * @return \Trismegiste\Mondrian\Transform\ReflectionContext
+     * @return ReflectionContext
      */
     public function getReflectionContext();
 
     /**
-     * @return \Trismegiste\Mondrian\Transform\GraphContext
+     * @return GraphContext
      */
     public function getGraphContext();
 
     /**
-     * @return \Trismegiste\Mondrian\Graph\Graph
+     * @return Graph
      */
     public function getGraph();
 }

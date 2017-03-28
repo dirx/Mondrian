@@ -7,16 +7,10 @@
 namespace Trismegiste\Mondrian\Visitor;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\MethodCall;
-use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use PhpParser\Node\Param;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
-use PhpParser\Node\Stmt\Return_;
-use PhpParser\Node\Stmt\Trait_;
+use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Parser\PhpPersistence;
 
 /**
@@ -33,7 +27,7 @@ class NewInstanceRefactor extends PublicCollector
     /**
      * The ctor needs a service for persistence of modified files
      *
-     * @param \Trismegiste\Mondrian\Parser\PhpPersistence $callable
+     * @param PhpPersistence $callable
      */
     public function __construct(PhpPersistence $callable)
     {
@@ -59,21 +53,21 @@ class NewInstanceRefactor extends PublicCollector
     {
         switch ($node->getType()) {
 
-            case 'Stmt_ClassMethod':
+            case 'Stmt_Stmt':
                 $this->currentMethodRelevant = false;
                 break;
 
             case 'Stmt_Class':
                 // generate
                 foreach ($this->factoryMethodStack as $name => $calling) {
-                    $factory = new ClassMethod($name);
-                    $factory->type = Class_::MODIFIER_PROTECTED;
+                    $factory = new Stmt\ClassMethod($name);
+                    $factory->type = Stmt\Class_::MODIFIER_PROTECTED;
                     $factory->params = $this->getProcessedArgument($calling->args);
                     $class = $calling->getAttribute('classShortcut');
 
                     $factory->stmts = [
-                        new Return_(
-                            new New_(new Name($class), $factory->params)
+                        new Stmt\Return_(
+                            new Expr\New_(new Name($class), $factory->params)
                         ),
                     ];
 
@@ -89,7 +83,7 @@ class NewInstanceRefactor extends PublicCollector
     {
         $param = [];
         foreach ($args as $idx => $argument) {
-            if ($argument->value->getType() === 'Expr_Variable') {
+            if ($argument->value->getType() === 'Expr_Expr') {
                 $paramName = $argument->value->name;
             } else {
                 $paramName = 'param' . $idx;
@@ -104,16 +98,16 @@ class NewInstanceRefactor extends PublicCollector
     /**
      * Enter in a new instance statement (only process "hard-coded" classname)
      *
-     * @param New_ $node
+     * @param Expr\New_ $node
      *
-     * @return MethodCall|null
+     * @return Expr\MethodCall|null
      */
-    protected function enterNewInstance(New_ $node)
+    protected function enterNewInstance(Expr\New_ $node)
     {
         if ($node->class instanceof Name) {
             $classShortcut = (string)$node->class;
             $methodName = 'create' . str_replace('\\', '_', $classShortcut) . count($node->args);
-            $calling = new MethodCall(new Variable('this'), $methodName);
+            $calling = new Expr\MethodCall(new Expr\Variable('this'), $methodName);
             $calling->args = $node->args;
             $calling->setAttribute('classShortcut', $classShortcut);
             $this->factoryMethodStack[$methodName] = $calling;
@@ -128,7 +122,7 @@ class NewInstanceRefactor extends PublicCollector
     /**
      * {@inheritdoc}
      */
-    protected function enterClassNode(Class_ $node)
+    protected function enterClassNode(Stmt\Class_ $node)
     {
         $this->factoryMethodStack = [];
         // to prevent cloning in Traverser (workaround) :
@@ -138,7 +132,7 @@ class NewInstanceRefactor extends PublicCollector
     /**
      * {@inheritdoc}
      */
-    protected function enterInterfaceNode(Interface_ $node)
+    protected function enterInterfaceNode(Stmt\Interface_ $node)
     {
 
     }
@@ -146,7 +140,7 @@ class NewInstanceRefactor extends PublicCollector
     /**
      * {@inheritdoc}
      */
-    protected function enterPublicMethodNode(ClassMethod $node)
+    protected function enterPublicMethodNode(Stmt\ClassMethod $node)
     {
         // only refactor a method if it contains more than 1 statements (would be pointless otherwise, IMO)
         $this->currentMethodRelevant = count($node->stmts) > 1;
@@ -166,7 +160,7 @@ class NewInstanceRefactor extends PublicCollector
         }
     }
 
-    protected function enterTraitNode(Trait_ $node)
+    protected function enterTraitNode(Stmt\Trait_ $node)
     {
         // @todo creating a new protected factory for a trait makes sense
     }

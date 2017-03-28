@@ -18,6 +18,10 @@ use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Trait_;
 use PhpParser\Node\Stmt\TraitUse;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Parser\PhpFile;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
 use Trismegiste\Mondrian\Visitor\Edge\Collector;
 
 /**
@@ -45,33 +49,33 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->reflection = $this->getMockBuilder('Trismegiste\Mondrian\Transform\ReflectionContext')
+        $this->reflection = $this->getMockBuilder(ReflectionContext::class)
             ->getMock();
-        $this->dictionary = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
+        $this->dictionary = $this->getMockBuilder(GraphContext::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->graph = $this->getMockBuilder('Trismegiste\Mondrian\Graph\Graph')
+        $this->graph = $this->getMockBuilder(Graph::class)
             ->getMock();
         $this->visitor = new Collector($this->reflection, $this->dictionary, $this->graph);
 
         $vertexNS = 'Trismegiste\Mondrian\Transform\Vertex';
         $this->vertex = [
-            'C' => $this->getMockBuilder("$vertexNS\ClassVertex")
+            'C' => $this->getMockBuilder("$vertexNS\\ClassVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
-            'I' => $this->getMockBuilder("$vertexNS\InterfaceVertex")
+            'I' => $this->getMockBuilder("$vertexNS\\InterfaceVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
-            'M' => $this->getMockBuilder("$vertexNS\MethodVertex")
+            'M' => $this->getMockBuilder("$vertexNS\\MethodVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
-            'S' => $this->getMockBuilder("$vertexNS\ImplVertex")
+            'S' => $this->getMockBuilder("$vertexNS\\ImplVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
-            'P' => $this->getMockBuilder("$vertexNS\ParamVertex")
+            'P' => $this->getMockBuilder("$vertexNS\\ParamVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
-            'T' => $this->getMockBuilder("$vertexNS\TraitVertex")
+            'T' => $this->getMockBuilder("$vertexNS\\TraitVertex")
                 ->disableOriginalConstructor()
                 ->getMock(),
         ];
@@ -85,8 +89,8 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
                 ['interface', 'Atavachron\Glass', $this->vertex['I']],
                 ['interface', 'Atavachron\Berwell', $this->vertex['I']],
                 ['method', 'Atavachron\Berwell::clown', $this->vertex['M']],
-                ['method', "Atavachron\Funnels::sand", $this->vertex['M']],
-                ['impl', "Atavachron\Funnels::sand", $this->vertex['S']],
+                ['method', 'Atavachron\Funnels::sand', $this->vertex['M']],
+                ['impl', 'Atavachron\Funnels::sand', $this->vertex['S']],
                 ['param', 'Atavachron\Berwell::clown/0', $this->vertex['P']],
                 ['param', 'Atavachron\Funnels::sand/0', $this->vertex['P']],
                 ['trait', 'Atavachron\Dominant', $this->vertex['T']],
@@ -105,7 +109,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
                 ['Atavachron\Berwell', true],
             ]));
 
-        $this->nodeList[-1] = new \Trismegiste\Mondrian\Parser\PhpFile('dummy', []);
+        $this->nodeList[-1] = new PhpFile('dummy', []);
         $this->nodeList[0] = new Namespace_(new Name('Atavachron'));
     }
 

@@ -19,7 +19,7 @@ class Director
     /**
      * The builder contains the components to create for making the compilation
      *
-     * @param \Trismegiste\Mondrian\Builder\Compiler\BuilderInterface $structure
+     * @param BuilderInterface $structure
      */
     public function __construct(BuilderInterface $structure)
     {

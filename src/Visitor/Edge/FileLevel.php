@@ -6,7 +6,6 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
-use PhpParser\Node;
 use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 

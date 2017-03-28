@@ -7,6 +7,8 @@
 namespace Trismegiste\Mondrian\Tests\Builder\Statement;
 
 use Trismegiste\Mondrian\Builder\Statement\Builder;
+use Trismegiste\Mondrian\Parser\PhpFile;
+use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
 
 /**
  * BuilderTest tests the build of the parser
@@ -18,7 +20,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockFile($absolute, $content)
     {
-        return new \Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo(($absolute), $content);
+        return new MockSplFileInfo(($absolute), $content);
     }
 
     protected function setUp()
@@ -34,7 +36,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $iter = new \ArrayIterator([$this->getMockFile('abc', '<?php class abc {}')]);
         $stmt = $this->parser->getParsed($iter);
         $this->assertCount(1, $stmt);
-        $this->assertInstanceOf('Trismegiste\Mondrian\Parser\PhpFile', $stmt[0]);
+        $this->assertInstanceOf(PhpFile::class, $stmt[0]);
         $content = new \ArrayIterator($stmt[0]->stmts);
         $this->assertCount(1, $content);
         $content->rewind();

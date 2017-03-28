@@ -24,7 +24,7 @@ abstract class PhpPersistence
     /**
      * Persist the file
      *
-     * @param \Trismegiste\Mondrian\Parser\PhpFile $aFile
+     * @param PhpFile $aFile
      */
     abstract public function write(PhpFile $aFile);
 }

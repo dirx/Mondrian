@@ -8,6 +8,7 @@ namespace Trismegiste\Mondrian\Tests\Parser;
 
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use Trismegiste\Mondrian\Parser\PhpFile;
 use Trismegiste\Mondrian\Parser\PhpFileBuilder;
 
 /**
@@ -21,7 +22,7 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
     public function testEmpty()
     {
         $file = $this->builder->getNode();
-        $this->assertInstanceOf('Trismegiste\Mondrian\Parser\PhpFile', $file);
+        $this->assertInstanceOf(PhpFile::class, $file);
         $this->assertEquals('abc.php', $file->getRealPath());
     }
 

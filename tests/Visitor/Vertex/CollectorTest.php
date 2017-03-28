@@ -131,17 +131,17 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
         $this->graph
             ->expects($this->at(1))
             ->method('addVertex')
-            ->with($this->isInstanceOf('Trismegiste\Mondrian\Transform\Vertex\MethodVertex'));
+            ->with($this->isInstanceOf(MethodVertex::class));
 
         $this->graph
             ->expects($this->at(2))
             ->method('addVertex')
-            ->with($this->isInstanceOf('Trismegiste\Mondrian\Transform\Vertex\ParamVertex'));
+            ->with($this->isInstanceOf(ParamVertex::class));
 
         $this->graph
             ->expects($this->at(3))
             ->method('addVertex')
-            ->with($this->isInstanceOf('Trismegiste\Mondrian\Transform\Vertex\ImplVertex'));
+            ->with($this->isInstanceOf(ImplVertex::class));
 
         foreach ($nodeList as $node) {
             $this->visitor->enterNode($node);
