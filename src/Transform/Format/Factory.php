@@ -19,6 +19,7 @@ class Factory
         'json' => Json::class,
         'svg' => Svg::class,
         'html' => Html::class,
+        'cyjs' => CytoscapeJs::class,
     ];
 
     public function create(Graph $graph, $format)
