@@ -1,16 +1,17 @@
 <?php
 
+/*
+ * Mondrian
+ */
+
 namespace Transform\Format;
 
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Tests\Transform\Format\NotPlanar;
 use Trismegiste\Mondrian\Transform\Format\CytoscapeJs;
 
-
 /**
- * @covers
- * @package Transform\Format
- * @author Dirk Adler <dirk.adler@idealo.de>
+ * CytoscapeJsTest is a test for CytoscapeJs decorator
  */
 class CytoscapeJsTest extends \PHPUnit_Framework_TestCase
 {
