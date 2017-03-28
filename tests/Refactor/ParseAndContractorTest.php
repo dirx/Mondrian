@@ -21,7 +21,7 @@ class ParseAndContractorTest extends RefactorTemplate
     {
         parent::setUp();
         $this->coder = new Linking(
-                new Builder(), new ContractorBuilder($this->dumper));
+            new Builder(), new ContractorBuilder($this->dumper));
     }
 
     /**
@@ -29,7 +29,7 @@ class ParseAndContractorTest extends RefactorTemplate
      */
     public function testGeneration()
     {
-        $this->dumper->init(array('Earth.php', 'Moon.php'), $this->exactly(4));
+        $this->dumper->init(['Earth.php', 'Moon.php'], $this->exactly(4));
 
         $this->coder->run($this->dumper->getIterator());
         $this->dumper->compileStorage();

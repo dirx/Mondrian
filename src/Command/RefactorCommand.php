@@ -7,10 +7,10 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -25,8 +25,8 @@ abstract class RefactorCommand extends Command
     protected function configure()
     {
         $this
-                ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
-                ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', array('Tests', 'vendor'));
+            ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
+            ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', ['Tests', 'vendor']);
     }
 
     /**
@@ -39,9 +39,9 @@ abstract class RefactorCommand extends Command
 
         $this->phpfinder = new Finder();
         $this->phpfinder->files()
-                ->in($directory)
-                ->name('*.php')
-                ->exclude($ignoreDir);
+            ->in($directory)
+            ->name('*.php')
+            ->exclude($ignoreDir);
     }
 
 }

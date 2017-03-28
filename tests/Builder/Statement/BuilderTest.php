@@ -31,11 +31,11 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testParsing()
     {
-        $iter = new \ArrayIterator(array($this->getMockFile('abc', '<?php class abc {}')));
+        $iter = new \ArrayIterator([$this->getMockFile('abc', '<?php class abc {}')]);
         $stmt = $this->parser->getParsed($iter);
         $this->assertCount(1, $stmt);
         $this->assertInstanceOf('Trismegiste\Mondrian\Parser\PhpFile', $stmt[0]);
-        $content = $stmt[0]->getIterator();
+        $content = new \ArrayIterator($stmt[0]->stmts);
         $this->assertCount(1, $content);
         $content->rewind();
         $this->assertEquals('Stmt_Class', $content->current()->getType());

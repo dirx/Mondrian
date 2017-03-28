@@ -44,6 +44,7 @@ class CodeMetrics extends Algorithm
      * Extract the class name of a vertex to get a printable result
      *
      * @param Vertex $v
+     *
      * @return string
      */
     private function extractShortName(Vertex $v)
@@ -63,15 +64,15 @@ class CodeMetrics extends Algorithm
      */
     public function getCardinal()
     {
-        $card = array(
+        $card = [
             'Class' => 0,
             'Interface' => 0,
             'Trait' => 0,
             'Impl' => 0,
             'Method' => 0,
             'Param' => 0,
-            'MethodDeclaration' => array('Class' => 0, 'Interface' => 0, 'Trait' => 0)
-        );
+            'MethodDeclaration' => ['Class' => 0, 'Interface' => 0, 'Trait' => 0],
+        ];
         $vertex = $this->graph->getVertexSet();
         foreach ($vertex as $v) {
             $type = $this->extractShortName($v);

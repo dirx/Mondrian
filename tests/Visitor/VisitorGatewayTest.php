@@ -34,21 +34,21 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function getMockState($key)
     {
-        $state = $this->getMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
         $state->expects($this->any())
-                ->method('getName')
-                ->will($this->returnValue($key));
+            ->method('getName')
+            ->will($this->returnValue($key));
 
         return $state;
     }
 
     protected function setUp()
     {
-        $this->reflectionCtx = $this->getMock('Trismegiste\Mondrian\Transform\ReflectionContext');
+        $this->reflectionCtx = $this->createMock('Trismegiste\Mondrian\Transform\ReflectionContext');
         $this->graphCtx = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
-                ->disableOriginalConstructor()
-                ->getMock();
-        $this->graph = $this->getMock('Trismegiste\Mondrian\Graph\Graph');
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->graph = $this->createMock('Trismegiste\Mondrian\Graph\Graph');
     }
 
     /**
@@ -69,19 +69,19 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function testStateKey()
     {
-        $state0 = $this->getMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state0 = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
         $state0->expects($this->exactly(2))
-                ->method('getName')
-                ->will($this->returnValue('key0'));
+            ->method('getName')
+            ->will($this->returnValue('key0'));
         $state0->expects($this->once())
-                ->method('setContext');
+            ->method('setContext');
 
-        $state1 = $this->getMock('Trismegiste\Mondrian\Visitor\State\State');
+        $state1 = $this->createMock('Trismegiste\Mondrian\Visitor\State\State');
         $state1->expects($this->once())
-                ->method('getName')
-                ->will($this->returnValue('key1'));
+            ->method('getName')
+            ->will($this->returnValue('key1'));
         $state1->expects($this->once())
-                ->method('setContext');
+            ->method('setContext');
 
         $this->buildVisitor([$state0, $state1]);
     }
@@ -90,9 +90,9 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
     {
         $state = $this->getMockState('key');
         $state->expects($this->once())
-                ->method('enter');
+            ->method('enter');
         $this->buildVisitor([$state]);
-        $node = $this->getMock('PhpParser\Node');
+        $node = $this->createMock('PhpParser\Node');
         $this->sut->enterNode($node);
     }
 
@@ -124,13 +124,13 @@ class VisitorGatewayTest extends \PHPUnit_Framework_TestCase
         $listing = [
             $this->getMockState('one'),
             $this->getMockState('two'),
-            $this->getMockState('three')
+            $this->getMockState('three'),
         ];
         $this->buildVisitor($listing);
         $node = [
-            $this->getMock('PhpParser\Node'),
-            $this->getMock('PhpParser\Node'),
-            $this->getMock('PhpParser\Node'),
+            $this->createMock('PhpParser\Node'),
+            $this->createMock('PhpParser\Node'),
+            $this->createMock('PhpParser\Node'),
         ];
 
         $this->assertNull($this->sut->getNodeFor('one'));

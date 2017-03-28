@@ -9,7 +9,7 @@ namespace Trismegiste\Mondrian\Tests\Parser;
 use Trismegiste\Mondrian\Parser\BuilderFactory;
 
 /**
- * BuilderFactoryTest tests the enhanced builder factory with PhpFile node 
+ * BuilderFactoryTest tests the enhanced builder factory with PhpFile node
  */
 class BuilderFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -6,6 +6,18 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor\Edge;
 
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Name;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Trait_;
+use PhpParser\Node\Stmt\TraitUse;
 use Trismegiste\Mondrian\Visitor\Edge\Collector;
 
 /**
@@ -34,67 +46,67 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->reflection = $this->getMockBuilder('Trismegiste\Mondrian\Transform\ReflectionContext')
-                ->getMock();
+            ->getMock();
         $this->dictionary = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
-                ->disableOriginalConstructor()
-                ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->graph = $this->getMockBuilder('Trismegiste\Mondrian\Graph\Graph')
-                ->getMock();
+            ->getMock();
         $this->visitor = new Collector($this->reflection, $this->dictionary, $this->graph);
 
         $vertexNS = 'Trismegiste\Mondrian\Transform\Vertex';
-        $this->vertex = array(
+        $this->vertex = [
             'C' => $this->getMockBuilder("$vertexNS\ClassVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock(),
+                ->disableOriginalConstructor()
+                ->getMock(),
             'I' => $this->getMockBuilder("$vertexNS\InterfaceVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock(),
+                ->disableOriginalConstructor()
+                ->getMock(),
             'M' => $this->getMockBuilder("$vertexNS\MethodVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock(),
+                ->disableOriginalConstructor()
+                ->getMock(),
             'S' => $this->getMockBuilder("$vertexNS\ImplVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock(),
+                ->disableOriginalConstructor()
+                ->getMock(),
             'P' => $this->getMockBuilder("$vertexNS\ParamVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock(),
+                ->disableOriginalConstructor()
+                ->getMock(),
             'T' => $this->getMockBuilder("$vertexNS\TraitVertex")
-                    ->disableOriginalConstructor()
-                    ->getMock()
-        );
+                ->disableOriginalConstructor()
+                ->getMock(),
+        ];
 
         $this->dictionary
-                ->expects($this->any())
-                ->method('findVertex')
-                ->will($this->returnValueMap(array(
-                            array('class', 'Atavachron\Funnels', $this->vertex['C']),
-                            array('class', 'Atavachron\Looking', $this->vertex['C']),
-                            array('interface', 'Atavachron\Glass', $this->vertex['I']),
-                            array('interface', 'Atavachron\Berwell', $this->vertex['I']),
-                            array('method', 'Atavachron\Berwell::clown', $this->vertex['M']),
-                            array('method', "Atavachron\Funnels::sand", $this->vertex['M']),
-                            array('impl', "Atavachron\Funnels::sand", $this->vertex['S']),
-                            array('param', 'Atavachron\Berwell::clown/0', $this->vertex['P']),
-                            array('param', 'Atavachron\Funnels::sand/0', $this->vertex['P']),
-                            ['trait', 'Atavachron\Dominant', $this->vertex['T']],
-                            ['trait', 'Atavachron\Synthaxe', $this->vertex['T']],
-                            ['impl', 'Atavachron\Dominant::plague', $this->vertex['S']],
-                            ['param', 'Atavachron\Dominant::plague/0', $this->vertex['P']],
-                            ['method', 'Atavachron\Funnels::plague', $this->vertex['M']],
-                            ['method', 'Atavachron\Looking::plague', $this->vertex['M']]
-        )));
+            ->expects($this->any())
+            ->method('findVertex')
+            ->will($this->returnValueMap([
+                ['class', 'Atavachron\Funnels', $this->vertex['C']],
+                ['class', 'Atavachron\Looking', $this->vertex['C']],
+                ['interface', 'Atavachron\Glass', $this->vertex['I']],
+                ['interface', 'Atavachron\Berwell', $this->vertex['I']],
+                ['method', 'Atavachron\Berwell::clown', $this->vertex['M']],
+                ['method', "Atavachron\Funnels::sand", $this->vertex['M']],
+                ['impl', "Atavachron\Funnels::sand", $this->vertex['S']],
+                ['param', 'Atavachron\Berwell::clown/0', $this->vertex['P']],
+                ['param', 'Atavachron\Funnels::sand/0', $this->vertex['P']],
+                ['trait', 'Atavachron\Dominant', $this->vertex['T']],
+                ['trait', 'Atavachron\Synthaxe', $this->vertex['T']],
+                ['impl', 'Atavachron\Dominant::plague', $this->vertex['S']],
+                ['param', 'Atavachron\Dominant::plague/0', $this->vertex['P']],
+                ['method', 'Atavachron\Funnels::plague', $this->vertex['M']],
+                ['method', 'Atavachron\Looking::plague', $this->vertex['M']],
+            ]));
 
         $this->reflection
-                ->expects($this->any())
-                ->method('isInterface')
-                ->will($this->returnValueMap(array(
-                            array('Atavachron\Glass', true),
-                            array('Atavachron\Berwell', true)
-        )));
+            ->expects($this->any())
+            ->method('isInterface')
+            ->will($this->returnValueMap([
+                ['Atavachron\Glass', true],
+                ['Atavachron\Berwell', true],
+            ]));
 
         $this->nodeList[-1] = new \Trismegiste\Mondrian\Parser\PhpFile('dummy', []);
-        $this->nodeList[0] = new \PHPParser_Node_Stmt_Namespace(new \PHPParser_Node_Name('Atavachron'));
+        $this->nodeList[0] = new Namespace_(new Name('Atavachron'));
     }
 
     protected function visitNodeList()
@@ -111,19 +123,19 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testClassInheritance()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[1]->extends = new \PHPParser_Node_Name('Looking');
-        $this->nodeList[1]->implements[] = new \PHPParser_Node_Name('Glass');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[1]->extends = new Name('Looking');
+        $this->nodeList[1]->implements[] = new Name('Glass');
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['C']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['C']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['I']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['I']);
 
         $this->visitNodeList();
     }
@@ -134,13 +146,13 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testInterfaceInheritance()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Interface('Berwell');
-        $this->nodeList[1]->extends[] = new \PHPParser_Node_Name('Glass');
+        $this->nodeList[1] = new Interface_('Berwell');
+        $this->nodeList[1]->extends[] = new Name('Glass');
 
         $this->graph
-                ->expects($this->once())
-                ->method('addEdge')
-                ->with($this->vertex['I'], $this->vertex['I']);
+            ->expects($this->once())
+            ->method('addEdge')
+            ->with($this->vertex['I'], $this->vertex['I']);
 
         $this->visitNodeList();
     }
@@ -153,29 +165,29 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testConcreteMethod()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
 
         $this->reflection
-                ->expects($this->once())
-                ->method('getDeclaringClass')
-                ->with('Atavachron\Funnels', 'sand')
-                ->will($this->returnValue('Atavachron\Funnels'));
+            ->expects($this->once())
+            ->method('getDeclaringClass')
+            ->with('Atavachron\Funnels', 'sand')
+            ->will($this->returnValue('Atavachron\Funnels'));
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['M']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['M']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['M'], $this->vertex['S']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['M'], $this->vertex['S']);
 
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['C']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['C']);
 
         $this->visitNodeList();
     }
@@ -187,18 +199,18 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testOverridenMethod()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['S']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['S']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['C']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['C']);
 
         $this->visitNodeList();
     }
@@ -209,19 +221,19 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testInterfaceMethod()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Interface('Berwell');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('clown');
+        $this->nodeList[1] = new Interface_('Berwell');
+        $this->nodeList[2] = new ClassMethod('clown');
 
         $this->reflection
-                ->expects($this->once())
-                ->method('getDeclaringClass')
-                ->with('Atavachron\Berwell', 'clown')
-                ->will($this->returnValue('Atavachron\Berwell'));
+            ->expects($this->once())
+            ->method('getDeclaringClass')
+            ->with('Atavachron\Berwell', 'clown')
+            ->will($this->returnValue('Atavachron\Berwell'));
 
         $this->graph
-                ->expects($this->once())
-                ->method('addEdge')
-                ->with($this->vertex['I'], $this->vertex['M']);
+            ->expects($this->once())
+            ->method('addEdge')
+            ->with($this->vertex['I'], $this->vertex['M']);
 
         $this->visitNodeList();
     }
@@ -233,30 +245,30 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTypedParameterInInterface()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Interface('Berwell');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('clown');
-        $this->nodeList[2]->params[] = new \PHPParser_Node_Param('obj', null, new \PHPParser_Node_Name('Funnels'));
+        $this->nodeList[1] = new Interface_('Berwell');
+        $this->nodeList[2] = new ClassMethod('clown');
+        $this->nodeList[2]->params[] = new Param('obj', null, new Name('Funnels'));
 
         $this->reflection
-                ->expects($this->once())
-                ->method('getDeclaringClass')
-                ->with('Atavachron\Berwell', 'clown')
-                ->will($this->returnValue('Atavachron\Berwell'));
+            ->expects($this->once())
+            ->method('getDeclaringClass')
+            ->with('Atavachron\Berwell', 'clown')
+            ->will($this->returnValue('Atavachron\Berwell'));
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['I'], $this->vertex['M']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['I'], $this->vertex['M']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['M'], $this->vertex['P']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['M'], $this->vertex['P']);
 
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['P'], $this->vertex['C']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['P'], $this->vertex['C']);
 
         $this->visitNodeList();
     }
@@ -267,42 +279,42 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonTypedParameterInClass()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[2]->params[] = new \PHPParser_Node_Param('obj');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[2]->params[] = new Param('obj');
 
         // Method is owned by the class
         $this->reflection
-                ->expects($this->once())
-                ->method('getDeclaringClass')
-                ->with('Atavachron\Funnels', 'sand')
-                ->will($this->returnValue('Atavachron\Funnels'));
+            ->expects($this->once())
+            ->method('getDeclaringClass')
+            ->with('Atavachron\Funnels', 'sand')
+            ->will($this->returnValue('Atavachron\Funnels'));
 
         // edges :
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['M']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['M']);
 
         $this->graph
-                ->expects($this->at(4))
-                ->method('addEdge')
-                ->with($this->vertex['M'], $this->vertex['P']);
+            ->expects($this->at(4))
+            ->method('addEdge')
+            ->with($this->vertex['M'], $this->vertex['P']);
 
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['C']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['C']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['M'], $this->vertex['S']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['M'], $this->vertex['S']);
 
         $this->graph
-                ->expects($this->at(3))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['P']);
+            ->expects($this->at(3))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['P']);
 
         $this->visitNodeList();
     }
@@ -313,15 +325,15 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testNewInstance()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[3] = new \PHPParser_Node_Expr_New(new \PHPParser_Node_Name('Looking'));
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[3] = new New_(new Name('Looking'));
 
         // edges :
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['C']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['C']);
 
         $this->visitNodeList();
     }
@@ -332,27 +344,27 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimpleCallFallback()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[3] = new \PHPParser_Node_Expr_MethodCall(
-                new \PHPParser_Node_Expr_Variable('obj'), 'clown');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[3] = new MethodCall(
+            new Variable('obj'), 'clown');
 
         $this->dictionary
-                ->expects($this->once())
-                ->method('findAllMethodSameName')
-                ->with('clown')
-                ->will($this->returnValue(array($this->vertex['M'])));
+            ->expects($this->once())
+            ->method('findAllMethodSameName')
+            ->with('clown')
+            ->will($this->returnValue([$this->vertex['M']]));
 
         $this->dictionary
-                ->expects($this->any())
-                ->method('getExcludedCall')
-                ->will($this->returnValue(array()));
+            ->expects($this->any())
+            ->method('getExcludedCall')
+            ->will($this->returnValue([]));
 
         // edges :
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['M']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['M']);
 
         $this->visitNodeList();
     }
@@ -362,16 +374,16 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testStaticCall()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[3] = new \PHPParser_Node_Expr_StaticCall(
-                new \PHPParser_Node_Name('Berwell'), 'clown');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[3] = new StaticCall(
+            new Name('Berwell'), 'clown');
 
         // edges :
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['M']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['M']);
 
         $this->visitNodeList();
     }
@@ -382,31 +394,31 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTypedCall()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[2]->params[] = new \PHPParser_Node_Param('obj', null, new \PHPParser_Node_Name('Berwell'));
-        $this->nodeList[3] = new \PHPParser_Node_Expr_MethodCall(new \PHPParser_Node_Expr_Variable('obj'), 'clown');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[2]->params[] = new Param('obj', null, new Name('Berwell'));
+        $this->nodeList[3] = new MethodCall(new Variable('obj'), 'clown');
 
         $this->dictionary
-                ->expects($this->any())
-                ->method('getExcludedCall')
-                ->will($this->returnValue(array()));
+            ->expects($this->any())
+            ->method('getExcludedCall')
+            ->will($this->returnValue([]));
 
         $this->reflection
-                ->expects($this->once())
-                ->method('hasDeclaringClass')
-                ->will($this->returnValue(true));
+            ->expects($this->once())
+            ->method('hasDeclaringClass')
+            ->will($this->returnValue(true));
 
         $this->reflection
-                ->expects($this->once())
-                ->method('findMethodInInheritanceTree')
-                ->will($this->returnArgument(0));
+            ->expects($this->once())
+            ->method('findMethodInInheritanceTree')
+            ->will($this->returnArgument(0));
 
         // edges :
         $this->graph
-                ->expects($this->at(2))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['M']);
+            ->expects($this->at(2))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['M']);
 
         $this->visitNodeList();
     }
@@ -417,42 +429,42 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExcludingCall()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Class('Funnels');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('sand');
-        $this->nodeList[3] = new \PHPParser_Node_Expr_MethodCall(
-                new \PHPParser_Node_Expr_Variable('obj'), 'clown');
+        $this->nodeList[1] = new Class_('Funnels');
+        $this->nodeList[2] = new ClassMethod('sand');
+        $this->nodeList[3] = new MethodCall(
+            new Variable('obj'), 'clown');
 
         $this->dictionary
-                ->expects($this->once())
-                ->method('findAllMethodSameName')
-                ->with('clown')
-                ->will($this->returnValue(array($this->vertex['M'])));
+            ->expects($this->once())
+            ->method('findAllMethodSameName')
+            ->with('clown')
+            ->will($this->returnValue([$this->vertex['M']]));
 
         $this->vertex['M']
-                ->expects($this->any())
-                ->method('getName')
-                ->will($this->returnValue('excluded'));
+            ->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('excluded'));
 
         $this->dictionary
-                ->expects($this->once())
-                ->method('getExcludedCall')
-                ->with('Atavachron\Funnels', 'sand')
-                ->will($this->returnValue(array('excluded')));
+            ->expects($this->once())
+            ->method('getExcludedCall')
+            ->with('Atavachron\Funnels', 'sand')
+            ->will($this->returnValue(['excluded']));
 
         // edges :
         $this->graph
-                ->expects($this->exactly(2))
-                ->method('addEdge');
+            ->expects($this->exactly(2))
+            ->method('addEdge');
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['C'], $this->vertex['S']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['C'], $this->vertex['S']);
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['C']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['C']);
 
         $this->visitNodeList();
     }
@@ -464,27 +476,27 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimpleTrait()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Trait('Dominant');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_ClassMethod('plague');
+        $this->nodeList[1] = new Trait_('Dominant');
+        $this->nodeList[2] = new ClassMethod('plague');
 
         $this->reflection->expects($this->once())
-                ->method('getClassesUsingTraitForDeclaringMethod')
-                ->will($this->returnValue([]));
+            ->method('getClassesUsingTraitForDeclaringMethod')
+            ->will($this->returnValue([]));
 
         // edges :
         $this->graph
-                ->expects($this->exactly(2))
-                ->method('addEdge');
+            ->expects($this->exactly(2))
+            ->method('addEdge');
 
         $this->graph
-                ->expects($this->at(1))
-                ->method('addEdge')
-                ->with($this->vertex['T'], $this->vertex['S']);
+            ->expects($this->at(1))
+            ->method('addEdge')
+            ->with($this->vertex['T'], $this->vertex['S']);
 
         $this->graph
-                ->expects($this->at(0))
-                ->method('addEdge')
-                ->with($this->vertex['S'], $this->vertex['T']);
+            ->expects($this->at(0))
+            ->method('addEdge')
+            ->with($this->vertex['S'], $this->vertex['T']);
 
         $this->visitNodeList();
     }
@@ -495,15 +507,15 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTraitUsingTrait()
     {
-        $this->nodeList[1] = new \PHPParser_Node_Stmt_Trait('Synthaxe');
-        $this->nodeList[2] = new \PHPParser_Node_Stmt_Trait('Dominant');
-        $this->nodeList[3] = new \PHPParser_Node_Stmt_TraitUse([new \PHPParser_Node_Name('Synthaxe')]);
+        $this->nodeList[1] = new Trait_('Synthaxe');
+        $this->nodeList[2] = new Trait_('Dominant');
+        $this->nodeList[3] = new TraitUse([new Name('Synthaxe')]);
 
         // edges :
         $this->graph
-                ->expects($this->once())
-                ->method('addEdge')
-                ->with($this->vertex['T'], $this->vertex['T']);
+            ->expects($this->once())
+            ->method('addEdge')
+            ->with($this->vertex['T'], $this->vertex['T']);
 
         $this->visitNodeList();
     }

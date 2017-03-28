@@ -6,6 +6,13 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor;
 
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\NodeTraverser;
+use PhpParser\PrettyPrinter\Standard;
+use Trismegiste\Mondrian\Parser\PhpPersistence;
 use Trismegiste\Mondrian\Visitor\NewInstanceRefactor;
 
 /**
@@ -17,40 +24,40 @@ class NewInstanceRefactorTest extends \PHPUnit_Framework_TestCase
     protected $visitor;
     protected $dumper;
 
-    protected function setUp()
-    {
-        $this->dumper = $this->getMockForAbstractClass('Trismegiste\Mondrian\Parser\PhpPersistence');
-        $this->visitor = new NewInstanceRefactor($this->dumper);
-    }
-
     public function testWithTraverser()
     {
-        $classNode = new \PHPParser_Node_Stmt_Class('Victory', array(
-            'stmts' => array(
-                new \PHPParser_Node_Stmt_ClassMethod('holy', array(
-                    'stmts' => array(
-                        new \PHPParser_Node_Expr_New(new \PHPParser_Node_Name('Holy\War')),
-                        new \PHPParser_Node_Expr_New(new \PHPParser_Node_Name('\Hangar18'))
-                    )
-                        ))
-            )
-        ));
+        $classNode = new Class_('Victory', [
+            'stmts' => [
+                new ClassMethod('holy', [
+                    'stmts' => [
+                        new New_(new Name('Holy\War')),
+                        new New_(new Name('\Hangar18')),
+                    ],
+                ]),
+            ],
+        ]);
 
-        $file = new \Trismegiste\Mondrian\Parser\PhpFile('/I/Am/Victory.php', array(
-            $classNode
-        ));
+        $file = new \Trismegiste\Mondrian\Parser\PhpFile('/I/Am/Victory.php', [
+            $classNode,
+        ]);
 
-        $traverser = new \PHPParser_NodeTraverser();
+        $traverser = new NodeTraverser();
         $traverser->addVisitor($this->visitor);
 
         $this->assertFalse($file->isModified());
-        $traverser->traverse(array($file));
+        $traverser->traverse([$file]);
         $this->assertTrue($file->isModified());
         $this->assertCount(3, $classNode->stmts);
 
-        $pp = new \PHPParser_PrettyPrinter_Default();
-        $flat = $pp->prettyPrint(iterator_to_array($file->getIterator()));
+        $pp = new Standard();
+        $flat = $pp->prettyPrint($file->stmts);
         eval($flat);
+    }
+
+    protected function setUp()
+    {
+        $this->dumper = $this->getMockForAbstractClass(PhpPersistence::class);
+        $this->visitor = new NewInstanceRefactor($this->dumper);
     }
 
 }

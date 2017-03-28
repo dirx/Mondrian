@@ -7,8 +7,8 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Analysis\LiskovSearch;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * LiskovCommand transforms a bunch of php files into a reduced digraph

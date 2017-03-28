@@ -21,13 +21,13 @@ class FileLevel extends FileLevelTemplate
         $this->getReflectionContext()->initClass($fqcn);
         // extends
         if (!is_null($node->extends)) {
-            $name = (string) $this->resolveClassName($node->extends);
+            $name = (string)$this->resolveClassName($node->extends);
             $this->getReflectionContext()->initClass($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }
         // implements
         foreach ($node->implements as $parent) {
-            $name = (string) $this->resolveClassName($parent);
+            $name = (string)$this->resolveClassName($parent);
             $this->getReflectionContext()->initInterface($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }
@@ -39,7 +39,7 @@ class FileLevel extends FileLevelTemplate
         $this->getReflectionContext()->initInterface($fqcn);
         // extends
         foreach ($node->extends as $interf) {
-            $name = (string) $this->resolveClassName($interf);
+            $name = (string)$this->resolveClassName($interf);
             $this->getReflectionContext()->initInterface($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }

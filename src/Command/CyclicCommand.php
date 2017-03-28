@@ -7,8 +7,8 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Analysis\Cycle;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * CyclicCommand reduces a graph to its strongly connected components

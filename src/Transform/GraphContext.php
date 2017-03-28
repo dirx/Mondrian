@@ -6,7 +6,6 @@
 
 namespace Trismegiste\Mondrian\Transform;
 
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Graph\Vertex;
 use Trismegiste\Mondrian\Transform\Logger\LoggerInterface;
 
@@ -26,6 +25,7 @@ class GraphContext
      *
      * @param array $cfg the config
      * @param \Trismegiste\Mondrian\Transform\Logger\LoggerInterface $log a logger
+     *
      * @throws \InvalidArgumentException if config is invalid
      */
     public function __construct(array $cfg, LoggerInterface $log)
@@ -35,10 +35,10 @@ class GraphContext
         }
         $this->fineTuning = $cfg;
 
-        $this->vertex = array('class' => array(), 'interface' => array(),
-            'method' => array(), 'impl' => array(),
-            'param' => array(), 'trait' => []
-        );
+        $this->vertex = ['class' => [], 'interface' => [],
+            'method' => [], 'impl' => [],
+            'param' => [], 'trait' => [],
+        ];
 
         $this->buildLogger = $log;
     }
@@ -81,9 +81,9 @@ class GraphContext
      */
     public function findAllMethodSameName($method)
     {
-        return array_filter($this->vertex['method'], function($val) use ($method) {
-                    return preg_match("#::$method$#", $val->getName());
-                });
+        return array_filter($this->vertex['method'], function ($val) use ($method) {
+            return preg_match("#::$method$#", $val->getName());
+        });
     }
 
     /**
@@ -108,7 +108,7 @@ class GraphContext
      */
     public function getExcludedCall($class, $method)
     {
-        $ret = array();
+        $ret = [];
         if (array_key_exists("$class::$method", $this->fineTuning['calling'])) {
             $ret = $this->fineTuning['calling']["$class::$method"]['ignore'];
         }
@@ -118,7 +118,7 @@ class GraphContext
 
     /**
      * Log a call found by the fallback
-     * 
+     *
      * @param string $class
      * @param string $method
      * @param string $called

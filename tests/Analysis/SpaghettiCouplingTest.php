@@ -7,9 +7,9 @@
 namespace Trismegiste\Mondrian\Tests\Analysis;
 
 use Trismegiste\Mondrian\Analysis\SpaghettiCoupling;
+use Trismegiste\Mondrian\Analysis\Strategy\ByCalling;
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Transform\Vertex;
-use Trismegiste\Mondrian\Analysis\Strategy\ByCalling;
 
 /**
  * SpaghettiCouplingTest tests SpaghettiCoupling analysis
@@ -42,7 +42,7 @@ class SpaghettiCouplingTest extends \PHPUnit_Framework_TestCase
         $mth = new Vertex\MethodVertex('B::callee');
         $called = new Vertex\ImplVertex('B::callee');
 
-        return array(array($cc, $impl, $dc, $mth, $called));
+        return [[$cc, $impl, $dc, $mth, $called]];
     }
 
     /**
@@ -56,7 +56,7 @@ class SpaghettiCouplingTest extends \PHPUnit_Framework_TestCase
         $this->graph->addEdge($callee, $called);
         $this->graph->addEdge($called, $declaring);
         $this->graph->generateCoupledClassGraph();
-        $result = & $this->reduced;
+        $result = &$this->reduced;
         $this->assertCount(0, $result->getVertexSet());
         $this->graph->addEdge($impl, $callee);
         $this->graph->generateCoupledClassGraph();

@@ -6,6 +6,10 @@
 
 namespace Trismegiste\Mondrian\Builder\Statement;
 
+use PhpParser\Lexer;
+use PhpParser\Parser\Multiple;
+use PhpParser\Parser\Php5;
+use PhpParser\Parser\Php7;
 use Trismegiste\Mondrian\Parser\PackageParser;
 
 /**
@@ -14,8 +18,19 @@ use Trismegiste\Mondrian\Parser\PackageParser;
 class Builder implements BuilderInterface
 {
 
+    /**
+     * @var Lexer
+     */
     protected $lexer;
+
+    /**
+     * @var PackageParser
+     */
     protected $fileParser;
+
+    /**
+     * @var PackageParser
+     */
     protected $packageParser;
 
     /**
@@ -23,7 +38,7 @@ class Builder implements BuilderInterface
      */
     public function buildLexer()
     {
-        $this->lexer = new \PHPParser_Lexer();
+        $this->lexer = new Lexer();
     }
 
     /**
@@ -31,7 +46,10 @@ class Builder implements BuilderInterface
      */
     public function buildFileLevel()
     {
-        $this->fileParser = new \PHPParser_Parser($this->lexer);
+        $this->fileParser = new Multiple([
+            new Php7($this->lexer),
+            new Php5($this->lexer),
+        ]);
     }
 
     /**

@@ -30,7 +30,7 @@ abstract class AbstractState implements State
      */
     public function leave(Node $node)
     {
-        
+
     }
 
     /**
@@ -59,10 +59,10 @@ abstract class AbstractState implements State
 
     /**
      * Search for a vertex of a given type
-     * 
+     *
      * @param string $type trait|class|interface|param|method|impl
      * @param string $key the key for this vertex
-     * 
+     *
      * @return \Trismegiste\Mondrian\Graph\Vertex
      */
     protected function findVertex($type, $key)

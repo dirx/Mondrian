@@ -6,6 +6,10 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
+use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Param;
 use Trismegiste\Mondrian\Refactor\Refactored;
 
 /**
@@ -26,7 +30,7 @@ class ParamRefactor extends FqcnHelper
     /**
      * {@inheritDoc}
      */
-    public function enterNode(\PHPParser_Node $node)
+    public function enterNode(Node $node)
     {
         parent::enterNode($node);
 
@@ -38,17 +42,16 @@ class ParamRefactor extends FqcnHelper
     /**
      * Visit a Param Node
      *
-     * @param \PHPParser_Node_Param $node
+     * @param Param $node
      */
-    protected function enterParam(\PHPParser_Node_Param $node)
+    protected function enterParam(Param $node)
     {
-        if ($node->type instanceof \PHPParser_Node_Name) {
-            $typeHint = (string) $this->resolveClassName($node->type);
+        if ($node->type instanceof Name) {
+            $typeHint = (string)$this->resolveClassName($node->type);
             if ($this->context->hasNewContract($typeHint)) {
-                $node->type = new \PHPParser_Node_Name_FullyQualified($this->context->getNewContract($typeHint));
+                $node->type = new FullyQualified((string)$this->context->getNewContract($typeHint));
                 $this->currentPhpFile->modified();
             }
         }
     }
-
 }

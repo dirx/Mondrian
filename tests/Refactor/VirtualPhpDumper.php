@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Tests\Refactor;
 
+use PhpParser\PrettyPrinter\Standard;
 use Trismegiste\Mondrian\Parser\PhpDumper;
 use Trismegiste\Mondrian\Parser\PhpFile;
 use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
@@ -32,13 +33,13 @@ class VirtualPhpDumper extends PhpDumper implements \IteratorAggregate
 
     public function init(array $fileSystem, \PHPUnit_Framework_MockObject_Matcher_Invocation $cptWrite)
     {
-        $this->invocationMocker = new \PHPUnit_Framework_MockObject_InvocationMocker();
+        $this->invocationMocker = new \PHPUnit_Framework_MockObject_InvocationMocker(['write']);
         $this->invocationMocker
-                ->expects($cptWrite)
-                ->method('write')
-                ->withAnyParameters();
+            ->expects($cptWrite)
+            ->method('write')
+            ->withAnyParameters();
 
-        $this->storage = array();
+        $this->storage = [];
         foreach ($fileSystem as $name) {
             $absolute = $this->directory . $name;
             $this->storage[$name] = $this->getMockFile($absolute, file_get_contents($absolute));
@@ -58,16 +59,20 @@ class VirtualPhpDumper extends PhpDumper implements \IteratorAggregate
     public function write(PhpFile $file)
     {
         $fch = $file->getRealPath();
-        $stmts = iterator_to_array($file->getIterator());
-        $prettyPrinter = new \PHPParser_PrettyPrinter_Default();
+        $stmts = $file->stmts;
+        $prettyPrinter = new Standard();
         $this->storage[basename($fch)] = $this->getMockFile(
-                $fch, "<?php\n\n" . $prettyPrinter->prettyPrint($stmts)
+            $fch, "<?php\n\n" . $prettyPrinter->prettyPrint($stmts)
         );
 
         $this->invocationMocker->invoke(
-                new \PHPUnit_Framework_MockObject_Invocation_Object(
-                'VirtualPhpDumper', 'write', array(basename($fch)), $this
-                )
+            new \PHPUnit_Framework_MockObject_Invocation_Object(
+                'VirtualPhpDumper',
+                'write',
+                [basename($fch)],
+                null,
+                $this
+            )
         );
     }
 

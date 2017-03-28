@@ -101,7 +101,7 @@ abstract class GraphTest extends \PHPUnit_Framework_TestCase
         $v = new Vertex('A');
         $this->graph->addVertex($v);
         $set = $this->graph->getSuccessor($v);
-        $this->assertEquals(array(), $set);
+        $this->assertEquals([], $set);
     }
 
     public function testSuccessor()
@@ -110,9 +110,9 @@ abstract class GraphTest extends \PHPUnit_Framework_TestCase
         $v2 = new Vertex('B');
         $this->graph->addEdge($v1, $v2);
         $set = $this->graph->getSuccessor($v1);
-        $this->assertEquals(array($v2), $set);
+        $this->assertEquals([$v2], $set);
         $set = $this->graph->getSuccessor($v2);
-        $this->assertEquals(array(), $set);
+        $this->assertEquals([], $set);
     }
 
     public function testIterator()

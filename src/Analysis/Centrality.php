@@ -7,10 +7,8 @@
 namespace Trismegiste\Mondrian\Analysis;
 
 use Trismegiste\Mondrian\Graph\Algorithm;
-use Trismegiste\Mondrian\Graph\Vertex;
 use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Graph\PowerIteration;
-use Trismegiste\Mondrian\Graph\ReversedDigraph;
 
 /**
  * Centrality analyses a graph and add centrality rank to vertices
@@ -40,8 +38,8 @@ abstract class Centrality extends Algorithm implements VertexDecorator
         $eigen = $power->getEigenVectorSparse();
 
         $eigenVector = $eigen['vector'];
-        $eigenArray = array();
-        $vertexArray = array();
+        $eigenArray = [];
+        $vertexArray = [];
         foreach ($eigenVector as $idx => $v) {
             $eigenArray[$idx] = $eigenVector->getInfo();
             $vertexArray[$idx] = $v;
@@ -57,12 +55,12 @@ abstract class Centrality extends Algorithm implements VertexDecorator
                 break;
             }
         }
-        $cardinal = (float) $threshold;
+        $cardinal = (float)$threshold;
 
         // only the order is interesting, I'm not Google
         $iter = 0;
         foreach ($eigenArray as $idx => $val) {
-            $pseudoRank = min(array($iter / $cardinal, 1));
+            $pseudoRank = min([$iter / $cardinal, 1]);
             $vertexArray[$idx]->setMeta($metaName, $pseudoRank);
             $iter++;
         }

@@ -36,6 +36,7 @@ class PowerIteration extends Algorithm
      * this graph
      *
      * @param float $precision
+     *
      * @return \SplObjectStorage
      */
     public function getEigenVectorSparse($precision = 0.001)
@@ -77,7 +78,7 @@ class PowerIteration extends Algorithm
             $iter++;
         } while (($delta > $precision) && ($iter < (2 * $dimension)));
 
-        return array('value' => $norm, 'vector' => $approx);
+        return ['value' => $norm, 'vector' => $approx];
     }
 
 }

@@ -8,7 +8,6 @@ namespace Trismegiste\Mondrian\Tests\Graph;
 
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Graph\Vertex;
-use Trismegiste\Mondrian\Graph\Edge;
 
 /**
  * SearchPathTest is a template method for testing path search algorithm
@@ -88,7 +87,7 @@ abstract class SearchPathTest extends \PHPUnit_Framework_TestCase
     {
         $node = new Vertex($prefix);
         if ($level > 0) {
-            foreach (array('L', 'R') as $branch) {
+            foreach (['L', 'R'] as $branch) {
                 $this->graph->addEdge($node, $this->recursivAppendTree($level - 1, $prefix . $branch));
             }
         }

@@ -6,17 +6,23 @@
 
 namespace Trismegiste\Mondrian\Parser;
 
+use PhpParser\BuilderAbstract;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Use_;
+use PhpParser\Node\Stmt\UseUse;
+
 /**
  * PhpFileBuilder is a builder for a PhpFile node :
  * Enforces the PSR-0 : one class per file
  */
-class PhpFileBuilder extends \PHPParser_BuilderAbstract
+class PhpFileBuilder extends BuilderAbstract
 {
 
     protected $filename;
     protected $fileNamespace = false;
     protected $theClass = null;
-    protected $useList = array();
+    protected $useList = [];
 
     public function __construct($absPath)
     {
@@ -25,7 +31,7 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
 
     public function getNode()
     {
-        $stmts = array();
+        $stmts = [];
         if ($this->fileNamespace) {
             $stmts[] = $this->fileNamespace;
         }
@@ -51,7 +57,7 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
     public function declaring($stmt)
     {
         $node = $this->normalizeNode($stmt);
-        if (in_array($node->getType(), array('Stmt_Class', 'Stmt_Interface'))) {
+        if (in_array($node->getType(), ['Stmt_Class', 'Stmt_Interface'])) {
             $this->theClass = $node;
         } else {
             throw new \InvalidArgumentException("Invalid node expected type " . $node->getType());
@@ -69,8 +75,8 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
      */
     public function ns($str)
     {
-        $this->fileNamespace = new \PHPParser_Node_Stmt_Namespace(
-                        new \PHPParser_Node_Name((string) $str));
+        $this->fileNamespace = new Namespace_(
+            new Name((string)$str));
 
         return $this;
     }
@@ -84,11 +90,11 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
      */
     public function addUse($str)
     {
-        $this->useList[] = new \PHPParser_Node_Stmt_Use(
-                        array(
-                            new \PHPParser_Node_Stmt_UseUse(
-                                    new \PHPParser_Node_Name(
-                                            (string) $str))));
+        $this->useList[] = new Use_(
+            [
+                new UseUse(
+                    new Name(
+                        (string)$str))]);
 
         return $this;
     }

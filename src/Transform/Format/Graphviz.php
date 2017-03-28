@@ -7,7 +7,6 @@
 namespace Trismegiste\Mondrian\Transform\Format;
 
 use Alom\Graphviz\Digraph;
-use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
  * Graphviz is a decorator for GraphViz output
@@ -23,7 +22,7 @@ class Graphviz extends GraphExporter
 
     public function export()
     {
-        $default = array('fixedsize' => true, 'width' => 2, 'height' => 2);
+        $default = ['fixedsize' => true, 'width' => 2, 'height' => 2];
         $dot = $this->createGraphVizDot();
         $inverseIndex = new \SplObjectStorage();
         // add vertices
@@ -33,12 +32,12 @@ class Graphviz extends GraphExporter
         }
         // add edges
         foreach ($this->graph->getEdgeSet() as $edge) {
-            $dot->edge(array($inverseIndex[$edge->getSource()], $inverseIndex[$edge->getTarget()]));
+            $dot->edge([$inverseIndex[$edge->getSource()], $inverseIndex[$edge->getTarget()]]);
         }
         // add cluster
         foreach ($this->getPartition() as $idx => $subgraph) {
             $scc = $dot->subgraph("cluster_$idx");
-            $scc->attr('graph', array('bgcolor' => 'antiquewhite'));
+            $scc->attr('graph', ['bgcolor' => 'antiquewhite']);
             foreach ($subgraph as $vertex) {
                 $scc->node($inverseIndex[$vertex]);
             }

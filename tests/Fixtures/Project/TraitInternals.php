@@ -22,12 +22,20 @@ trait TraitInternals
 
 }
 
-class TraitConfig {
-    public function calling() {}
+class TraitConfig
+{
+    public function calling()
+    {
+    }
 }
 
-class TraitHelper {
-    static public function simple() {}
+class TraitHelper
+{
+    static public function simple()
+    {
+    }
 }
 
-class TraitDocument {}
+class TraitDocument
+{
+}

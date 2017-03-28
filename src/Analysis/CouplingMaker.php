@@ -7,10 +7,10 @@
 namespace Trismegiste\Mondrian\Analysis;
 
 use Trismegiste\Mondrian\Graph\Algorithm;
+use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
 use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ParamVertex;
-use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 
 /**
  * CouplingMaker searches for interface with class in its methods parameters.
@@ -30,7 +30,8 @@ class CouplingMaker extends Algorithm implements Generator
         foreach ($this->getEdgeSet() as $declaring) {
             // we search for methods declared in interfaces
             if (($declaring->getSource() instanceof InterfaceVertex)
-                    && ($declaring->getTarget() instanceof MethodVertex)) {
+                && ($declaring->getTarget() instanceof MethodVertex)
+            ) {
                 $method = $declaring->getTarget();
                 // scan for all parameters
                 foreach ($this->getEdgeIterator($method) as $param) {

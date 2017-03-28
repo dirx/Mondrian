@@ -6,12 +6,11 @@
 
 namespace Trismegiste\Mondrian\Analysis\Strategy;
 
-use Trismegiste\Mondrian\Graph\Vertex;
-use Trismegiste\Mondrian\Graph\Edge;
 use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Graph\Vertex;
+use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
-use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 
 /**
  * ByCalling  selects path between classes if there is a call.

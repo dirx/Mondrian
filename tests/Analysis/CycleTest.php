@@ -36,7 +36,7 @@ class CycleTest extends \PHPUnit_Framework_TestCase
         $mth = new Vertex\MethodVertex('B::callee');
         $impl = new Vertex\ImplVertex('B::callee');
 
-        return array(array($dc, $mth, $impl));
+        return [[$dc, $mth, $impl]];
     }
 
     /**

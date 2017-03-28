@@ -39,7 +39,7 @@ class LiskovSearchTest extends \PHPUnit_Framework_TestCase
         $mth = new Vertex\MethodVertex('B::callee');
         $called = new Vertex\ImplVertex('B::callee');
 
-        return array(array($cc, $impl, $dc, $mth, $called));
+        return [[$cc, $impl, $dc, $mth, $called]];
     }
 
     /**

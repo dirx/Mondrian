@@ -37,7 +37,7 @@ class HiddenCouplingTest extends \PHPUnit_Framework_TestCase
         $dc = new Vertex\ClassVertex('B');
         $mth = new Vertex\MethodVertex('B::callee');
 
-        return array(array($cc, $impl, $dc, $mth));
+        return [[$cc, $impl, $dc, $mth]];
     }
 
     /**

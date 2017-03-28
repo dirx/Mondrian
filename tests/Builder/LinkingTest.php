@@ -20,28 +20,28 @@ class LinkingTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->parser = $this->getMock('Trismegiste\Mondrian\Builder\Statement\BuilderInterface');
-        $this->compiler = $this->getMock('Trismegiste\Mondrian\Builder\Compiler\BuilderInterface');
+        $this->parser = $this->createMock('Trismegiste\Mondrian\Builder\Statement\BuilderInterface');
+        $this->compiler = $this->createMock('Trismegiste\Mondrian\Builder\Compiler\BuilderInterface');
         $this->facade = new Linking($this->parser, $this->compiler);
     }
 
     public function testRun()
     {
         $this->parser
-                ->expects($this->once())
-                ->method('getParsed')
-                ->will($this->returnValue(array()));
+            ->expects($this->once())
+            ->method('getParsed')
+            ->will($this->returnValue([]));
 
         $this->compiler
-                ->expects($this->once())
-                ->method('buildContext');
+            ->expects($this->once())
+            ->method('buildContext');
 
         $this->compiler
-                ->expects($this->once())
-                ->method('buildCollectors')
-                ->will($this->returnValue(array()));
+            ->expects($this->once())
+            ->method('buildCollectors')
+            ->will($this->returnValue([]));
 
-        $this->facade->run($this->getMock('Iterator'));
+        $this->facade->run($this->createMock('Iterator'));
     }
 
 }

@@ -21,7 +21,7 @@ abstract class TraitUserLevel extends AbstractObjectLevel
         $fqcn = $this->getCurrentFqcn();
         // @todo do not forget aliases
         foreach ($node->traits as $import) {
-            $name = (string) $fileState->resolveClassName($import);
+            $name = (string)$fileState->resolveClassName($import);
             $this->getReflectionContext()->initTrait($name);
             $this->getReflectionContext()->pushUseTrait($fqcn, $name);
         }

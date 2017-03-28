@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Transform;
 
-use Trismegiste\Mondrian\Transform\GraphContext;
 use Trismegiste\Mondrian\Graph\Vertex;
+use Trismegiste\Mondrian\Transform\GraphContext;
 
 /**
  * GraphContextTest tests for vertex mapping Context
@@ -19,23 +19,23 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->context = new GraphContext(array('calling' => array()), $this->getLoggerMock());
+        $this->context = new GraphContext(['calling' => []], $this->getLoggerMock());
     }
 
     public function getVertexMock()
     {
-        foreach (array('class', 'interface', 'impl', 'method', 'param', 'trait') as $pool) {
-            $v[] = array($pool, $this->getMockBuilder('Trismegiste\Mondrian\Graph\Vertex')
-                        ->disableOriginalConstructor()
-                        ->getMock());
+        foreach (['class', 'interface', 'impl', 'method', 'param', 'trait'] as $pool) {
+            $v[] = [$pool, $this->getMockBuilder('Trismegiste\Mondrian\Graph\Vertex')
+                ->disableOriginalConstructor()
+                ->getMock()];
         }
 
         return $v;
     }
-    
+
     protected function getLoggerMock()
     {
-        return $this->getMock('Trismegiste\Mondrian\Transform\Logger\LoggerInterface');
+        return $this->createMock('Trismegiste\Mondrian\Transform\Logger\LoggerInterface');
     }
 
     /**
@@ -69,15 +69,15 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
     public function testFindMethodByName()
     {
         $v = $this->getMockBuilder('Trismegiste\Mondrian\Graph\Vertex')
-                ->setMethods(array('getName'))
-                ->disableOriginalConstructor()
-                ->getMock();
+            ->setMethods(['getName'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $v->expects($this->once())
-                ->method('getName')
-                ->will($this->returnValue('Some::getter'));
+            ->method('getName')
+            ->will($this->returnValue('Some::getter'));
 
         $this->context->indicesVertex('method', 'unused', $v);
-        $this->assertEquals(array('unused' => $v), $this->context->findAllMethodSameName('getter'));
+        $this->assertEquals(['unused' => $v], $this->context->findAllMethodSameName('getter'));
     }
 
     /**
@@ -85,17 +85,17 @@ class GraphContextTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadConfig()
     {
-        new GraphContext(array(), $this->getLoggerMock());
+        new GraphContext([], $this->getLoggerMock());
     }
 
     public function testGoodConfig()
     {
-        $ctx = new GraphContext(array(
-            'calling' => array(
-                'A::b' => array('ignore' => array('C::d'))
-            )
-        ), $this->getLoggerMock());
-        $this->assertEquals(array('C::d'), $ctx->getExcludedCall('A', 'b'));
+        $ctx = new GraphContext([
+            'calling' => [
+                'A::b' => ['ignore' => ['C::d']],
+            ],
+        ], $this->getLoggerMock());
+        $this->assertEquals(['C::d'], $ctx->getExcludedCall('A', 'b'));
     }
 
 }

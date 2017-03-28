@@ -17,6 +17,7 @@ abstract class TraitUserHelper extends ObjectLevelHelper
 
     /**
      * Adds an edge from a class|trait toward a trait
+     *
      * @param \PhpParser\Node\Stmt\TraitUse $node
      * @param \Trismegiste\Mondrian\Graph\Vertex $source
      */
@@ -24,7 +25,7 @@ abstract class TraitUserHelper extends ObjectLevelHelper
     {
         $fileState = $this->context->getState('file');
         foreach ($node->traits as $import) {
-            $name = (string) $fileState->resolveClassName($import);
+            $name = (string)$fileState->resolveClassName($import);
             $target = $this->findVertex('trait', $name);
             // it's possible to not find a trait if it coming from an external library for example
             // or could be dead code too

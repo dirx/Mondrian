@@ -7,13 +7,15 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
 use Symfony\Component\Console\Input\InputOption;
-use Trismegiste\Mondrian\Analysis\SpaghettiCoupling;
-use Trismegiste\Mondrian\Graph\Digraph;
-use Trismegiste\Mondrian\Analysis\Strategy;
+use Symfony\Component\Console\Output\OutputInterface;
 use Trismegiste\Mondrian\Analysis\Cycle;
+use Trismegiste\Mondrian\Analysis\SpaghettiCoupling;
+use Trismegiste\Mondrian\Analysis\Strategy\ByCalling;
+use Trismegiste\Mondrian\Analysis\Strategy\ByConnection;
+use Trismegiste\Mondrian\Analysis\Strategy\ByImplemented;
+use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * SpaghettiCommand reduces a graph to its coupled implementation vertices
@@ -51,11 +53,11 @@ class SpaghettiCommand extends AbstractParse
 
     private function getClassFor($strategy)
     {
-        $typeList = array(
-            'call' => 'Trismegiste\Mondrian\Analysis\Strategy\ByCalling',
-            'concrete' => 'Trismegiste\Mondrian\Analysis\Strategy\ByImplemented',
-            'any' => 'Trismegiste\Mondrian\Analysis\Strategy\ByConnection'
-        );
+        $typeList = [
+            'call' => ByCalling::class,
+            'concrete' => ByImplemented::class,
+            'any' => ByConnection::class,
+        ];
         if (array_key_exists($strategy, $typeList)) {
             return $typeList[$strategy];
         } else {

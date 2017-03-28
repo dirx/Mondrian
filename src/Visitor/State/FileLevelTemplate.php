@@ -6,16 +6,21 @@
 
 namespace Trismegiste\Mondrian\Visitor\State;
 
+use PhpParser\Error;
 use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Trait_;
 
 /**
  * FileLevelTemplate is Template Method DP for a FileLevel state
  */
 abstract class FileLevelTemplate extends AbstractState
 {
-
     /**
-     * @var null|PHPParser_Node_Name Current namespace
+     * @var null|Name Current namespace
      */
     protected $namespace;
 
@@ -30,17 +35,21 @@ abstract class FileLevelTemplate extends AbstractState
 
             case 'Stmt_Namespace' :
                 $this->namespace = $node->name;
-                $this->aliases = array();
+                $this->aliases = [];
                 // @todo : with multiple namespaces in one file : does this bug ?
                 // leave() shouldn't reset these values ?
                 break;
 
             case 'Stmt_UseUse' :
-                if (isset($this->aliases[$node->alias])) {
-                    throw new \PhpParser\Error(
-                    sprintf(
-                            'Cannot use "%s" as "%s" because the name is already in use', $node->name, $node->alias
-                    ), $node->getLine()
+                if (isset($this->aliases[$node->alias]) && $this->aliases[$node->alias] !== $node->name) {
+                    throw new Error(
+                        sprintf(
+                            'Cannot use "%s" as "%s" because the name is already in use as %s',
+                            $node->name,
+                            $node->alias,
+                            $this->aliases[$node->alias]
+                        ),
+                        $node->getLine()
                     );
                 }
                 $this->aliases[$node->alias] = $node->name;
@@ -63,38 +72,38 @@ abstract class FileLevelTemplate extends AbstractState
         }
     }
 
-    /**
-     * Enters in a class node
-     */
-    abstract protected function enterClassNode(Node\Stmt\Class_ $node);
-
-    /**
-     * Enters in an interface node
-     */
-    abstract protected function enterInterfaceNode(Node\Stmt\Interface_ $node);
-
-    /**
-     * Enters in a trait node
-     */
-    abstract protected function enterTraitNode(Node\Stmt\Trait_ $node);
-
     public function getName()
     {
         return 'file';
     }
 
     /**
+     * Enters in a class node
+     */
+    abstract protected function enterClassNode(Class_ $node);
+
+    /**
+     * Enters in a trait node
+     */
+    abstract protected function enterTraitNode(Trait_ $node);
+
+    /**
+     * Enters in an interface node
+     */
+    abstract protected function enterInterfaceNode(Interface_ $node);
+
+    /**
      * resolve the Name with current namespace and alias
      *
-     * @param Node\Name $src
-     * 
-     * @return Node\Name|Node\Name\FullyQualified
+     * @param Name $src
+     *
+     * @return Name|FullyQualified
      */
     public function resolveClassName(Node\Name $src)
     {
         $name = clone $src;
         // don't resolve special class names
-        if (in_array((string) $name, array('self', 'parent', 'static'))) {
+        if (in_array((string)$name, ['self', 'parent', 'static'])) {
             return $name;
         }
 
@@ -105,32 +114,30 @@ abstract class FileLevelTemplate extends AbstractState
 
         // resolve aliases (for non-relative names)
         if (!$name->isRelative() && isset($this->aliases[$name->getFirst()])) {
-            $name->setFirst($this->aliases[$name->getFirst()]);
             // if no alias exists prepend current namespace
+            return FullyQualified::concat($this->aliases[$name->getFirst()], $name->slice(1));
         } elseif (null !== $this->namespace) {
-            $name->prepend($this->namespace);
+            return FullyQualified::concat($this->namespace, $src);
         }
 
-        return new Node\Name\FullyQualified($name->parts, $name->getAttributes());
+        return $name;
     }
 
     /**
      * Helper : get the FQCN of the given $node->name
      *
      * @param Node $node
-     * 
+     *
      * @return string
      */
     public function getNamespacedName(Node $node)
     {
         if (null !== $this->namespace) {
-            $namespacedName = clone $this->namespace;
-            $namespacedName->append($node->name);
+            $namespacedName = FullyQualified::concat($this->namespace, $node->name);
         } else {
             $namespacedName = $node->name;
         }
 
-        return (string) $namespacedName;
+        return (string)$namespacedName;
     }
-
 }

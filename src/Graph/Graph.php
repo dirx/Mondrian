@@ -31,6 +31,7 @@ interface Graph
      *
      * @param Vertex $source
      * @param Vertex $target
+     *
      * @return Edge
      */
     public function searchEdge(Vertex $source, Vertex $target);
@@ -38,14 +39,14 @@ interface Graph
     /**
      * Get the vertices in the graph
      *
-     * @return array
+     * @return Vertex[]
      */
     public function getVertexSet();
 
     /**
      * Get the edges set
      *
-     * @return array
+     * @return Edge[]
      */
     public function getEdgeSet();
 
@@ -61,7 +62,8 @@ interface Graph
      * Get an iterator on edges for one vertex
      *
      * @param Vertex $v
-     * @return Iterator
+     *
+     * @return \Iterator|Edge[]
      */
     public function getEdgeIterator(Vertex $v);
 

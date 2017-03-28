@@ -12,7 +12,7 @@ namespace Trismegiste\Mondrian\Refactor;
 class Refactored
 {
 
-    protected $newContract = array();
+    protected $newContract = [];
 
     /**
      * Stack a new contract for a concrete class

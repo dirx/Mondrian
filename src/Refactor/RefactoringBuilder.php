@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Refactor;
 
-use Trismegiste\Mondrian\Parser\PhpPersistence;
 use Trismegiste\Mondrian\Builder\Compiler\AbstractTraverser;
+use Trismegiste\Mondrian\Parser\PhpPersistence;
 
 /**
  * RefactoringBuilder builds an abstract builder for refactoring service

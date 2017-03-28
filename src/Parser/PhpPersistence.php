@@ -6,6 +6,8 @@
 
 namespace Trismegiste\Mondrian\Parser;
 
+use PhpParser\PrettyPrinter\Standard;
+
 /**
  * PhpPersistence is an abstract template for persisting a PhpFile
  */
@@ -16,7 +18,7 @@ abstract class PhpPersistence
 
     public function __construct(/* logger, output ? */)
     {
-        $this->prettyPrinter = new \PHPParser_PrettyPrinter_Default();
+        $this->prettyPrinter = new Standard();
     }
 
     /**

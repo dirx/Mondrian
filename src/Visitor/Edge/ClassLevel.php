@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
+use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
 /**
@@ -14,7 +15,7 @@ use PhpParser\Node\Stmt;
 class ClassLevel extends TraitUserHelper
 {
 
-    public function enter(\PhpParser\Node $node)
+    public function enter(Node $node)
     {
         switch ($node->getType()) {
 

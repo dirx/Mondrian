@@ -9,7 +9,7 @@ namespace Trismegiste\Mondrian\Parser;
 /**
  * BuilderFactory is an abstract factory
  */
-class BuilderFactory extends \PHPParser_BuilderFactory
+class BuilderFactory extends \PhpParser\BuilderFactory
 {
 
     public function file($name)

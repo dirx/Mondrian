@@ -14,21 +14,20 @@ use Trismegiste\Mondrian\Graph\Graph;
 class Factory
 {
 
-    protected $typeList = array(
-        'dot' => 'Graphviz',
-        'json' => 'Json',
-        'svg' => 'Svg',
-        'html' => 'Html'
-    );
+    protected $typeList = [
+        'dot' => Graphviz::class,
+        'json' => Json::class,
+        'svg' => Svg::class,
+        'html' => Html::class,
+    ];
 
-    public function create(Graph $g, $format)
+    public function create(Graph $graph, $format)
     {
         if (array_key_exists($format, $this->typeList)) {
-            $classname = __NAMESPACE__ . '\\' . $this->typeList[$format];
-            return new $classname($g);
+            $className = $this->typeList[$format];
+            return new $className($graph);
         }
 
-        throw new \InvalidArgumentException("Format $format is inknown");
+        throw new \InvalidArgumentException("Format $format is unknown");
     }
-
 }

@@ -6,10 +6,10 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
-use Trismegiste\Mondrian\Visitor\VisitorGateway;
-use Trismegiste\Mondrian\Transform\ReflectionContext;
-use Trismegiste\Mondrian\Transform\GraphContext;
 use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
+use Trismegiste\Mondrian\Visitor\VisitorGateway;
 
 /**
  * Collector is the main visitor for creating edges between already-created vertices
@@ -26,7 +26,7 @@ class Collector extends VisitorGateway
             new InterfaceLevel(),
             new TraitLevel(),
             new ClassMethodLevel(),
-            new TraitMethodLevel()
+            new TraitMethodLevel(),
         ];
 
         parent::__construct($visitor, $ref, $grf, $g);

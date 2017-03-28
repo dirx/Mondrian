@@ -6,6 +6,11 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Trait_;
 use Trismegiste\Mondrian\Refactor\Refactored;
 
 /**
@@ -26,12 +31,12 @@ class NewContractCollector extends PublicCollector
     /**
      * {@inheritDoc}
      */
-    protected function enterClassNode(\PHPParser_Node_Stmt_Class $node)
+    protected function enterClassNode(Class_ $node)
     {
         $this->extractAnnotation($node);
         if ($node->hasAttribute('contractor')) {
-            $interfaceName = new \PHPParser_Node_Name(reset($node->getAttribute('contractor')));
-            $this->context->pushNewContract($this->getNamespacedName($node), (string) $this->resolveClassName($interfaceName));
+            $interfaceName = new Name(reset($node->getAttribute('contractor')));
+            $this->context->pushNewContract($this->getNamespacedName($node), (string)$this->resolveClassName($interfaceName));
             $node->implements[] = $interfaceName;
             $this->currentPhpFile->modified();
         }
@@ -40,7 +45,7 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterInterfaceNode(\PHPParser_Node_Stmt_Interface $node)
+    protected function enterInterfaceNode(Interface_ $node)
     {
 
     }
@@ -48,7 +53,7 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterPublicMethodNode(\PHPParser_Node_Stmt_ClassMethod $node)
+    protected function enterPublicMethodNode(ClassMethod $node)
     {
 
     }
@@ -56,9 +61,9 @@ class NewContractCollector extends PublicCollector
     /**
      * do nothing
      */
-    protected function enterTraitNode(\PHPParser_Node_Stmt_Trait $node)
+    protected function enterTraitNode(Trait_ $node)
     {
-        
+
     }
 
 }

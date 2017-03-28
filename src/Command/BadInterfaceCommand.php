@@ -7,9 +7,8 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
-use Symfony\Component\Console\Input\InputOption;
 use Trismegiste\Mondrian\Analysis\CouplingMaker;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * BadInterfaceCommand transforms reduced the digraph

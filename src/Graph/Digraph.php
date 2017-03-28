@@ -75,6 +75,7 @@ class Digraph implements Graph
      *
      * @param Vertex $source
      * @param Vertex $target
+     *
      * @return Edge the edge or null
      */
     public function searchEdge(Vertex $source, Vertex $target)
@@ -95,7 +96,7 @@ class Digraph implements Graph
      */
     public function getVertexSet()
     {
-        $set = array();
+        $set = [];
         foreach ($this->adjacency as $vertex) {
             $set[] = $vertex;
         }
@@ -110,7 +111,7 @@ class Digraph implements Graph
      */
     public function getEdgeSet()
     {
-        $set = array();
+        $set = [];
         foreach ($this->adjacency as $vertex) {
             $edgeList = $this->adjacency->getInfo();
             foreach ($edgeList as $item) {
@@ -126,13 +127,14 @@ class Digraph implements Graph
      * by edges coming from the given vertex)
      *
      * @param Vertex $v
+     *
      * @return Vertex[] array of successor vertex
      */
     public function getSuccessor(Vertex $v)
     {
         $set = null;
         if ($this->adjacency->contains($v)) {
-            $set = array();
+            $set = [];
             foreach ($this->adjacency[$v] as $succ) {
                 $set[] = $succ;
             }
@@ -154,7 +156,7 @@ class Digraph implements Graph
      */
     public function getPartition()
     {
-        return array();
+        return [];
     }
 
 }

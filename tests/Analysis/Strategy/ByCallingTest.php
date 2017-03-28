@@ -7,12 +7,11 @@
 namespace Trismegiste\Mondrian\Tests\Analysis\Strategy;
 
 use Trismegiste\Mondrian\Analysis\Strategy\ByCalling;
+use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Edge;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
-use Trismegiste\Mondrian\Graph\Digraph;
-use Trismegiste\Mondrian\Graph\Edge;
-use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
  * ByCallingTest is a unit test for ByCalling strategy
@@ -30,7 +29,7 @@ class ByCallingTest extends TestTemplate
      */
     public function testDirect($src, $dst)
     {
-        $this->strategy->collapseEdge($src, $dst, array(new Edge($src, $dst)));
+        $this->strategy->collapseEdge($src, $dst, [new Edge($src, $dst)]);
         $this->assertCount(0, $this->result->getVertexSet());
     }
 

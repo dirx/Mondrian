@@ -8,8 +8,8 @@ class WithClosure
     public function sample()
     {
         $lambda = function ($param) {
-                    echo $param;
-                };
+            echo $param;
+        };
 
         $lambda('coucou');
     }

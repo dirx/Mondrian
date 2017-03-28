@@ -8,8 +8,6 @@ namespace Trismegiste\Mondrian\Tests\Graph;
 
 use Trismegiste\Mondrian\Graph\BreadthFirstSearch;
 use Trismegiste\Mondrian\Graph\Digraph;
-use Trismegiste\Mondrian\Graph\Vertex;
-use Trismegiste\Mondrian\Graph\Edge;
 
 /**
  * BreadthFirstSearchTest is a test for BFS algo

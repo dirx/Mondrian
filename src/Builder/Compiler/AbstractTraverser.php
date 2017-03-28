@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Builder\Compiler;
 
-use PhpParser\NodeVisitor;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 
 /**
  * AbstractTraverser partly builds the compiler with a traverser

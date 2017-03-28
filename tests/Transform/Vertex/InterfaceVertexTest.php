@@ -26,7 +26,7 @@ class InterfaceVertexTest extends \PHPUnit_Framework_TestCase
     {
         $vertex = new InterfaceVertex('Full\Qualified\Class\Name\Sample');
         $attr = $vertex->getAttribute();
-        $this->assertEquals("FQCN".StaticAnalysis::LABEL_DELIMITER."Sample", $attr['label']);
+        $this->assertEquals("FQCN" . StaticAnalysis::LABEL_DELIMITER . "Sample", $attr['label']);
     }
 
 }

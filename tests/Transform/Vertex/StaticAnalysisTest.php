@@ -17,15 +17,15 @@ class StaticAnalysisTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->vertex = $this
-                ->getMockForAbstractClass('Trismegiste\Mondrian\Transform\Vertex\StaticAnalysis', array('a'));
+            ->getMockForAbstractClass('Trismegiste\Mondrian\Transform\Vertex\StaticAnalysis', ['a']);
         $this->vertex->expects($this->any())
-                ->method('getSpecific')
-                ->will($this->returnValue(array()));
+            ->method('getSpecific')
+            ->will($this->returnValue([]));
     }
 
     public function testAttribute()
     {
-        $this->assertEquals(array(), $this->vertex->getAttribute());
+        $this->assertEquals([], $this->vertex->getAttribute());
     }
 
     public function testCentralityMeta()

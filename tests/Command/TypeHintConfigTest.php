@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Command;
 
-use Trismegiste\Mondrian\Command\TypeHintConfig;
 use Symfony\Component\Console\Tester\CommandTester;
+use Trismegiste\Mondrian\Command\TypeHintConfig;
 
 /**
  * TypeHintConfigTest is a func test for TypeHintConfig
@@ -24,11 +24,11 @@ class TypeHintConfigTest extends TestTemplate
     {
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'dir' => __DIR__ . '/../Fixtures/Refact/',
-            '--dry' => true
-        ));
+            '--dry' => true,
+        ]);
     }
 
 }

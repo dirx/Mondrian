@@ -14,13 +14,18 @@ use Trismegiste\Mondrian\Graph\Vertex;
 abstract class StaticAnalysis extends Vertex implements Vizable, MetaInterface
 {
 
-    const LABEL_DELIMITER  = '\n';
+    const LABEL_DELIMITER = '\n';
 
-    protected $metadata = array();
+    protected $metadata = [];
 
     public function getMeta($key)
     {
         return $this->metadata[$key];
+    }
+
+    public function getMetas()
+    {
+        return $this->metadata;
     }
 
     public function setMeta($key, $val)
@@ -50,6 +55,7 @@ abstract class StaticAnalysis extends Vertex implements Vizable, MetaInterface
      * Compacts a FQCN by shortening the full "path"
      *
      * @param string $str the FQCN
+     *
      * @return string a compacted form of the FQCN
      */
     protected function compactFqcn($str)

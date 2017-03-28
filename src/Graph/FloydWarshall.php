@@ -6,7 +6,6 @@
 
 namespace Trismegiste\Mondrian\Graph;
 
-use Trismegiste\Mondrian\Graph\Algorithm;
 use Trismegiste\Mondrian\Algebra\ByteMatrix;
 
 /**

@@ -16,21 +16,23 @@ interface VisitorContext
 
     /**
      * Push a new state associated with a node on the stack
-     * 
+     *
      * @param State $stateKey
-     * 
+     *
      * @return State the previous state
      */
     public function pushState($stateKey, Node $node);
 
     /**
      * @param string $stateKey
+     *
      * @return Node
      */
     public function getNodeFor($stateKey);
 
     /**
      * @param string $stateKey
+     *
      * @return State
      */
     public function getState($stateKey);

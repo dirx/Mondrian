@@ -7,22 +7,22 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 use Trismegiste\Mondrian\Builder\Linking;
 use Trismegiste\Mondrian\Builder\Statement\Builder;
-use Trismegiste\Mondrian\Transform\GraphBuilder;
-use Symfony\Component\Finder\Finder;
-use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Config\Helper;
+use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Transform\GraphBuilder;
 use Trismegiste\Mondrian\Transform\Logger\GraphLogger;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * TypeHintConfig generates a default type-hint config files
- * 
+ *
  * Overwrites any previous existing
  */
 class TypeHintConfig extends Command
@@ -38,11 +38,11 @@ class TypeHintConfig extends Command
     protected function configure()
     {
         $this
-                ->setName('typehint:config')
-                ->setDescription('Regenerates and overwrites any existing typehint config at the root of the package')
-                ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
-                ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', array('Tests', 'vendor'))
-                ->addOption('dry', null, InputOption::VALUE_NONE, 'Dry run (no write)');
+            ->setName('typehint:config')
+            ->setDescription('Regenerates and overwrites any existing typehint config at the root of the package')
+            ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
+            ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', ['Tests', 'vendor'])
+            ->addOption('dry', null, InputOption::VALUE_NONE, 'Dry run (no write)');
     }
 
     /**
@@ -92,16 +92,16 @@ class TypeHintConfig extends Command
     {
         $scan = new Finder();
         $scan->files()
-                ->in($directory)
-                ->name('*.php')
-                ->exclude($ignoreDir);
+            ->in($directory)
+            ->name('*.php')
+            ->exclude($ignoreDir);
 
         return $scan;
     }
 
     /**
      * Dump the config
-     * 
+     *
      * @param \Trismegiste\Mondrian\Transform\Logger\GraphLogger $logger
      */
     protected function writeConfig(GraphLogger $logger)

@@ -6,6 +6,8 @@
 
 namespace Trismegiste\Mondrian\Builder\Statement;
 
+use PhpParser\Node;
+
 /**
  * Director is a director for parsing a set of failes
  */
@@ -21,9 +23,10 @@ class Director
 
     /**
      * Parses a list of php files
-     * 
+     *
      * @param \Iterator $iter an iterator of SplFileInfo
-     * @return array an array of PHPParser_Node
+     *
+     * @return Node[]
      */
     public function parse(\Iterator $iter)
     {

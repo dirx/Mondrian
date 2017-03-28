@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Command;
 
-use Trismegiste\Mondrian\Command\SpaghettiCommand;
 use Symfony\Component\Console\Tester\CommandTester;
+use Trismegiste\Mondrian\Command\SpaghettiCommand;
 
 /**
  * SpaghettiCommandTest is a unit test for SpaghettiCommand
@@ -33,11 +33,11 @@ class SpaghettiCommandTest extends TestTemplate
     {
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'dir' => __DIR__,
-            '--strategy' => 'loose'
-        ));
+            '--strategy' => 'loose',
+        ]);
     }
 
 }

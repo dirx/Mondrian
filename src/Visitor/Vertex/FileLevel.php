@@ -6,8 +6,12 @@
 
 namespace Trismegiste\Mondrian\Visitor\Vertex;
 
-use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
+use PhpParser\Node;
 use PhpParser\Node\Stmt;
+use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
+use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
+use Trismegiste\Mondrian\Transform\Vertex\TraitVertex;
+use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 
 /**
  * FileLevel is a visitor for file level to add vertex of class, trait, interface
@@ -17,17 +21,17 @@ class FileLevel extends FileLevelTemplate
 
     protected function enterClassNode(Stmt\Class_ $node)
     {
-        $this->factoryPrototype($node, 'class', 'Trismegiste\Mondrian\Transform\Vertex\ClassVertex');
+        $this->factoryPrototype($node, 'class', ClassVertex::class);
     }
 
     protected function enterInterfaceNode(Stmt\Interface_ $node)
     {
-        $this->factoryPrototype($node, 'interface', 'Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex');
+        $this->factoryPrototype($node, 'interface', InterfaceVertex::class);
     }
 
     protected function enterTraitNode(Stmt\Trait_ $node)
     {
-        $this->factoryPrototype($node, 'trait', 'Trismegiste\Mondrian\Transform\Vertex\TraitVertex');
+        $this->factoryPrototype($node, 'trait', TraitVertex::class);
     }
 
     private function factoryPrototype(Stmt $node, $type, $vertexClass)

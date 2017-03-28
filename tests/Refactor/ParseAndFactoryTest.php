@@ -21,7 +21,7 @@ class ParseAndFactoryTest extends RefactorTemplate
     {
         parent::setUp();
         $this->coder = new Linking(
-                new Builder(), new FactoryGenBuilder($this->dumper));
+            new Builder(), new FactoryGenBuilder($this->dumper));
     }
 
     /**
@@ -29,7 +29,7 @@ class ParseAndFactoryTest extends RefactorTemplate
      */
     public function testGeneration()
     {
-        $this->dumper->init(array('ForFactory.php'), $this->once());
+        $this->dumper->init(['ForFactory.php'], $this->once());
         $this->coder->run($this->dumper->getIterator());
         $this->dumper->compileStorage();
         $this->assertTrue(class_exists('Refact\ForFactory', false));

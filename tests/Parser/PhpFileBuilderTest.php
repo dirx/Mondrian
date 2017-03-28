@@ -6,6 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Parser;
 
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use Trismegiste\Mondrian\Parser\PhpFileBuilder;
 
 /**
@@ -15,11 +17,6 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
 {
 
     protected $builder;
-
-    protected function setUp()
-    {
-        $this->builder = new PhpFileBuilder('abc.php');
-    }
 
     public function testEmpty()
     {
@@ -31,46 +28,51 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
     public function testNamespace()
     {
         $file = $this->builder->ns('Vertex')->getNode();
-        $ns = $file->getIterator()->current();
-        $this->assertEquals('Vertex', (string) $ns->name);
+        $ns = current($file->stmts);
+        $this->assertEquals('Vertex', (string)$ns->name);
     }
 
     public function testUsing()
     {
         $file = $this->builder->addUse('Nice')->addUse('Sprites')->getNode();
-        $using = iterator_to_array($file->getIterator());
-        $this->assertEquals('Nice', (string) $using[0]->uses[0]->name);
-        $this->assertEquals('Sprites', (string) $using[1]->uses[0]->name);
+        $using = $file->stmts;
+        $this->assertEquals('Nice', (string)$using[0]->uses[0]->name);
+        $this->assertEquals('Sprites', (string)$using[1]->uses[0]->name);
     }
 
     public function testClass()
     {
         $file = $this->builder
-                ->declaring(new \PHPParser_Node_Stmt_Class('Scary'))
-                ->getNode();
-        $cls = $file->getIterator()->current();
-        $this->assertEquals('Scary', (string) $cls->name);
+            ->declaring(new Class_('Scary'))
+            ->getNode();
+        $cls = current($file->stmts);
+        $this->assertEquals('Scary', (string)$cls->name);
     }
 
     public function testOnlyOneClass()
     {
         $file = $this->builder
-                ->declaring(new \PHPParser_Node_Stmt_Class('Scary'))
-                ->declaring(new \PHPParser_Node_Stmt_Class('Monsters'))
-                ->getNode();
-        $cls = $file->getIterator()->current();
-        $this->assertEquals('Monsters', (string) $cls->name);
+            ->declaring(new Class_('Scary'))
+            ->declaring(new Class_('Monsters'))
+            ->getNode();
+        $cls = current($file->stmts);
+        $this->assertEquals('Monsters', (string)$cls->name);
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Stmt_ClassMethod
      */
     public function testInvalidNodeThrowsException()
     {
         $file = $this->builder
-                ->declaring(new \PHPParser_Node_Stmt_ClassMethod('Fail'))
-                ->getNode();
+            ->declaring(new ClassMethod('Fail'))
+            ->getNode();
+    }
+
+    protected function setUp()
+    {
+        $this->builder = new PhpFileBuilder('abc.php');
     }
 
 }
