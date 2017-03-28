@@ -21,11 +21,11 @@ class CytoscapeJs extends GraphExporter
     /**
      * @var \SplObjectStorage
      */
-    protected $nodeIdMap;
+    protected $vertexIdMap;
 
     public function export()
     {
-        $this->buildNodeIdMap();
+        $this->buildVertexIdMap();
 
         $dump = [
             "format_version" => "1.0",
@@ -49,11 +49,11 @@ class CytoscapeJs extends GraphExporter
         return json_encode($dump, JSON_PRETTY_PRINT);
     }
 
-    protected function buildNodeIdMap()
+    protected function buildVertexIdMap()
     {
-        $this->nodeIdMap = new \SplObjectStorage();
+        $this->vertexIdMap = new \SplObjectStorage();
         foreach ($this->graph->getVertexSet() as $id => $vertex) {
-            $this->nodeIdMap[$vertex] = $id;
+            $this->vertexIdMap[$vertex] = $id;
         }
     }
 
@@ -202,14 +202,14 @@ class CytoscapeJs extends GraphExporter
                 'target' => 'n' . $this->resolveNodeId($target),
                 'interaction' => $relation = $this->resolveInteraction($source, $target),
                 'interactionColor' => $this->resolveInteractionColor($relation),
-                'weight' => $this->resolveWeight($source, $target),
+                'weight' => $this->resolveWeight($source),
             ],
         ];
     }
 
     protected function resolveNodeId(Vertex $vertex)
     {
-        return $this->nodeIdMap[$vertex];
+        return $this->vertexIdMap[$vertex];
     }
 
     protected function resolveInteraction(Vertex $source, Vertex $target)
@@ -269,44 +269,14 @@ class CytoscapeJs extends GraphExporter
         return isset($colors[$interaction]) ? $colors[$interaction] : 'DarkGray';
     }
 
-    protected function resolveWeight(Vertex $source, Vertex $target)
+    protected function resolveWeight(Vertex $source)
     {
-        $types = $this->resolveSymbolType($source) . '-' . $this->resolveSymbolType($target);
+        $type = $this->resolveSymbolType($source);
 
-        switch ($types) {
-            case 'class-class':
-            case 'interface-interface':
-                return 2;
-
-            case 'class-interface':
-                return 2;
-
-            case 'class-trait':
-                return 2;
-
-            case 'class-method':
-            case 'interface-method':
-                return 2;
-
-            case 'class-impl':
-            case 'method-impl':
-            case 'trait-impl':
-            case 'method-param':
-                return 2;
-
-            case 'impl-class':
-            case 'impl-param':
-            case 'impl-trait':
-                return 1;
-
-            case 'impl-method':
-                return 1;
-
-            case 'param-class':
-            case 'param-interface':
-                return 2;
+        if ($type == 'impl') {
+            return 1;
         }
 
-        return 1;
+        return 2;
     }
 }

@@ -40,7 +40,7 @@ class CytoscapeJsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, count($content['elements']['edges']));
     }
 
-    public function testRequiredNodeAttibutes()
+    public function testRequiredNodeAttributes()
     {
         $exporter = new CytoscapeJs(new NotPlanar());
 
@@ -50,10 +50,11 @@ class CytoscapeJsTest extends \PHPUnit_Framework_TestCase
         $node = $content['elements']['nodes'][0]['data'];
         $this->assertArrayHasKey('id', $node);
         $this->assertArrayHasKey('label', $node);
+        $this->assertArrayHasKey('shape', $node);
         $this->assertArrayHasKey('color', $node);
     }
 
-    public function testRequiredEgdeAttibutes()
+    public function testRequiredEdgeAttributes()
     {
         $exporter = new CytoscapeJs(new NotPlanar());
 
