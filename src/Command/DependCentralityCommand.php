@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Command;
 
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Analysis\DependCentrality;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * DependCentralityCommand transforms a bunch of php files into a digraph

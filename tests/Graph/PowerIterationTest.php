@@ -6,9 +6,9 @@
 
 namespace Trismegiste\Mondrian\Tests\Graph;
 
-use Trismegiste\Mondrian\Graph\Vertex;
-use Trismegiste\Mondrian\Graph\PowerIteration;
 use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\PowerIteration;
+use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
  * PowerIterationTest is a
@@ -44,15 +44,16 @@ class PowerIterationTest extends \PHPUnit_Framework_TestCase
 
     public function loop()
     {
-        $ret = array();
+        $ret = [];
         for ($k = 0; $k < 10; $k++) {
-            $ret[] = array($k);
+            $ret[] = [$k];
         }
         return $ret;
     }
 
     /**
      * @dataProvider loop
+     *
      * @param type $iter
      */
     public function testEigenSparse($iter)

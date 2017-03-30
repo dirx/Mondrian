@@ -38,7 +38,7 @@ class CouplingMakerTest extends \PHPUnit_Framework_TestCase
         $cls = new Vertex\ClassVertex('B');
         $impl = new Vertex\ImplVertex('B::meth');
 
-        return array(array($inter, $mth, $cls, $impl, $param));
+        return [[$inter, $mth, $cls, $impl, $param]];
     }
 
     /**

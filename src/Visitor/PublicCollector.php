@@ -6,6 +6,9 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
+use PhpParser\Node;
+use PhpParser\Node\Stmt;
+
 /**
  * PublicCollector is an abstract node collector for public "things" of types
  *
@@ -19,35 +22,35 @@ abstract class PublicCollector extends FqcnHelper
     /**
      * Visits a class node
      *
-     * @param \PHPParser_Node_Stmt_Class $node
+     * @param Stmt\Class_ $node
      */
-    abstract protected function enterClassNode(\PHPParser_Node_Stmt_Class $node);
+    abstract protected function enterClassNode(Stmt\Class_ $node);
 
     /**
      * Visits an interface node
      *
-     * @param \PHPParser_Node_Stmt_Interface $node
+     * @param Stmt\Interface_ $node
      */
-    abstract protected function enterInterfaceNode(\PHPParser_Node_Stmt_Interface $node);
+    abstract protected function enterInterfaceNode(Stmt\Interface_ $node);
 
     /**
      * Visits an trait node
      *
-     * @param \PHPParser_Node_Stmt_Trait $node
+     * @param Stmt\Trait_ $node
      */
-    abstract protected function enterTraitNode(\PHPParser_Node_Stmt_Trait $node);
+    abstract protected function enterTraitNode(Stmt\Trait_ $node);
 
     /**
      * Visits a public method node
      *
-     * @param \PHPParser_Node_Stmt_ClassMethod $node
+     * @param Stmt\ClassMethod $node
      */
-    abstract protected function enterPublicMethodNode(\PHPParser_Node_Stmt_ClassMethod $node);
+    abstract protected function enterPublicMethodNode(Stmt\ClassMethod $node);
 
     /**
      * {@inheritDoc}
      */
-    public function enterNode(\PHPParser_Node $node)
+    public function enterNode(Node $node)
     {
         parent::enterNode($node);
 
@@ -67,7 +70,7 @@ abstract class PublicCollector extends FqcnHelper
                 $this->currentClass = $this->getNamespacedName($node);
                 $this->enterTraitNode($node);
                 break;
-            
+
             case 'Stmt_ClassMethod' :
                 if ($node->isPublic()) {
                     $this->currentMethod = $node->name;
@@ -80,13 +83,13 @@ abstract class PublicCollector extends FqcnHelper
     /**
      * {@inheritDoc}
      */
-    public function leaveNode(\PHPParser_Node $node)
+    public function leaveNode(Node $node)
     {
         switch ($node->getType()) {
 
             case 'Stmt_Class':
             case 'Stmt_Interface':
-            case 'Stmt_Trait':    
+            case 'Stmt_Trait':
                 $this->currentClass = false;
                 break;
 
@@ -116,12 +119,12 @@ abstract class PublicCollector extends FqcnHelper
      * Extracts annotations in the comment of a statement and injects them in
      * attribute of the node
      *
-     * @param \PHPParser_Node_Stmt $node
+     * @param Stmt $node
      */
-    protected function extractAnnotation(\PHPParser_Node_Stmt $node)
+    protected function extractAnnotation(Stmt $node)
     {
         if ($node->hasAttribute('comments')) {
-            $compil = array();
+            $compil = [];
             foreach ($node->getAttribute('comments') as $comm) {
                 preg_match_all('#^.*@mondrian\s+([\w]+)\s+([^\s]+)\s*$#m', $comm->getReformattedText(), $match);
                 foreach ($match[0] as $idx => $matchedOccur) {
@@ -134,5 +137,4 @@ abstract class PublicCollector extends FqcnHelper
             }
         }
     }
-
 }

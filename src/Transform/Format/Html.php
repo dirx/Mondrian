@@ -7,8 +7,8 @@
 namespace Trismegiste\Mondrian\Transform\Format;
 
 /**
- * Html is an exporter to Html + Json + d3.js format 
- * 
+ * Html is an exporter to Html + Json + d3.js format
+ *
  * Do not require Graphviz
  */
 class Html extends Json

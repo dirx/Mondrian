@@ -17,7 +17,7 @@ class NullDumper extends PhpPersistence
      */
     public function write(PhpFile $aFile)
     {
-        
+
     }
 
 }

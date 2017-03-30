@@ -6,7 +6,7 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
-use PhpParser\Node\Stmt;
+use PhpParser\Node;
 
 /**
  * InterfaceLevel is ...
@@ -14,7 +14,7 @@ use PhpParser\Node\Stmt;
 class InterfaceLevel extends ObjectLevelHelper
 {
 
-    public function enter(\PhpParser\Node $node)
+    public function enter(Node $node)
     {
         if ($node->getType() == 'Stmt_ClassMethod') {
             // NS

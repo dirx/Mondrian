@@ -17,7 +17,7 @@ class Helper
 
     static public function doThing()
     {
-        
+
     }
 
 }

@@ -7,7 +7,7 @@ trait ServiceTrait
 
     public function someService()
     {
-        
+
     }
 
 }

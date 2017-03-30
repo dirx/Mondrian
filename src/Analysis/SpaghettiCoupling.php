@@ -6,12 +6,8 @@
 
 namespace Trismegiste\Mondrian\Analysis;
 
-use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
-use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
-use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
-use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
-use Trismegiste\Mondrian\Graph\Edge;
 use Trismegiste\Mondrian\Graph\BreadthFirstSearch;
+use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
 
 /**
  * SpaghettiCoupling is an analyser which finds coupling between classes,

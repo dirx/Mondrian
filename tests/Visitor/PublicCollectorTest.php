@@ -6,6 +6,10 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor;
 
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Trait_;
 use Trismegiste\Mondrian\Visitor\PublicCollector;
 
 /**
@@ -18,17 +22,12 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     protected $visitor;
 
-    protected function setUp()
-    {
-        $this->visitor = $this->getMockForAbstractClass('Trismegiste\Mondrian\Visitor\PublicCollector');
-    }
-
     public function testClassNodeWithoutNS()
     {
-        $node = new \PHPParser_Node_Stmt_Class('Metal');
+        $node = new Class_('Metal');
         $this->visitor->expects($this->once())
-                ->method('enterClassNode')
-                ->with($node);
+            ->method('enterClassNode')
+            ->with($node);
 
         $this->visitor->enterNode($node);
         $this->assertAttributeEquals('Metal', 'currentClass', $this->visitor);
@@ -38,10 +37,10 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testPublicMethodNode()
     {
-        $node = new \PHPParser_Node_Stmt_ClassMethod('fatigue');
+        $node = new ClassMethod('fatigue');
         $this->visitor->expects($this->once())
-                ->method('enterPublicMethodNode')
-                ->with($node);
+            ->method('enterPublicMethodNode')
+            ->with($node);
 
         $this->visitor->enterNode($node);
         $this->assertAttributeEquals('fatigue', 'currentMethod', $this->visitor);
@@ -51,10 +50,10 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testNonPublicMethodNode()
     {
-        $node = new \PHPParser_Node_Stmt_ClassMethod('fatigue');
-        $node->type = \PHPParser_Node_Stmt_Class::MODIFIER_PROTECTED;
+        $node = new ClassMethod('fatigue');
+        $node->flags = Class_::MODIFIER_PROTECTED;
         $this->visitor->expects($this->never())
-                ->method('enterPublicMethodNode');
+            ->method('enterPublicMethodNode');
 
         $this->visitor->enterNode($node);
         $this->assertAttributeEquals(false, 'currentMethod', $this->visitor);
@@ -64,10 +63,10 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testInterfaceNodeWithoutNS()
     {
-        $node = new \PHPParser_Node_Stmt_Interface('Home');
+        $node = new Interface_('Home');
         $this->visitor->expects($this->once())
-                ->method('enterInterfaceNode')
-                ->with($node);
+            ->method('enterInterfaceNode')
+            ->with($node);
 
         $this->visitor->enterNode($node);
         $this->assertAttributeEquals('Home', 'currentClass', $this->visitor);
@@ -77,15 +76,20 @@ class PublicCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testTraitNodeWithoutNS()
     {
-        $node = new \PHPParser_Node_Stmt_Trait('Popipo');
+        $node = new Trait_('Popipo');
         $this->visitor->expects($this->once())
-                ->method('enterTraitNode')
-                ->with($node);
+            ->method('enterTraitNode')
+            ->with($node);
 
         $this->visitor->enterNode($node);
         $this->assertAttributeEquals('Popipo', 'currentClass', $this->visitor);
         $this->visitor->leaveNode($node);
         $this->assertAttributeEquals(false, 'currentClass', $this->visitor);
+    }
+
+    protected function setUp()
+    {
+        $this->visitor = $this->getMockForAbstractClass(PublicCollector::class);
     }
 
 }

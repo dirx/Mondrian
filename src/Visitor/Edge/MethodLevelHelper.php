@@ -6,8 +6,10 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
-use Trismegiste\Mondrian\Visitor\State\AbstractState;
 use PhpParser\Node;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Name;
+use Trismegiste\Mondrian\Visitor\State\AbstractState;
 
 /**
  * MethodLevelHelper is ...
@@ -22,8 +24,8 @@ abstract class MethodLevelHelper extends AbstractState
     public function enter(Node $node)
     {
         $this->currentFqcn = $this->context
-                ->getState('file')
-                ->getNamespacedName($this->context->getNodeFor($this->getParentName()));
+            ->getState('file')
+            ->getNamespacedName($this->context->getNodeFor($this->getParentName()));
         $this->currentMethodNode = $this->context->getNodeFor($this->getName());
         $this->fileState = $this->context->getState('file');
 
@@ -47,9 +49,9 @@ abstract class MethodLevelHelper extends AbstractState
      * Links the current implementation vertex to all methods with the same
      * name. Filters on some obvious cases.
      *
-     * @param Node\Expr\MethodCall $node
+     * @param Expr\MethodCall $node
      */
-    protected function enterMethodCall(Node\Expr\MethodCall $node)
+    protected function enterMethodCall(Expr\MethodCall $node)
     {
         if (is_string($node->name)) {
             $this->enterNonDynamicMethodCall($node);
@@ -62,9 +64,9 @@ abstract class MethodLevelHelper extends AbstractState
      * Do not process : call_user_func(array($obj, 'getThing'), $arg);
      * Do not process : $reflectionMethod->invoke($obj, 'getThing', $arg);
      *
-     * @param Node\Expr\MethodCall $node
+     * @param Expr\MethodCall $node
      */
-    protected function enterNonDynamicMethodCall(Node\Expr\MethodCall $node)
+    protected function enterNonDynamicMethodCall(Expr\MethodCall $node)
     {
         $method = $node->name;
         $candidate = null;
@@ -77,19 +79,19 @@ abstract class MethodLevelHelper extends AbstractState
         // fallback : link to every methods with the same name :
         if (is_null($candidate)) {
             $candidate = $this->getGraphContext()
-                    ->findAllMethodSameName($method);
+                ->findAllMethodSameName($method);
             if (count($candidate)) {
                 // store the fallback for futher report
                 foreach ($candidate as $called) {
                     $this->getGraphContext()
-                            ->logFallbackCall($this->currentFqcn, $this->currentMethodNode->name, $called->getName());
+                        ->logFallbackCall($this->currentFqcn, $this->currentMethodNode->name, $called->getName());
                 }
             }
         }
         $impl = $this->findVertex('impl', $this->currentFqcn . '::' . $this->currentMethodNode->name);
         // fallback or not, we exclude calls from annotations
         $exclude = $this->getGraphContext()
-                ->getExcludedCall($this->currentFqcn, $this->currentMethodNode->name);
+            ->getExcludedCall($this->currentFqcn, $this->currentMethodNode->name);
         foreach ($candidate as $methodVertex) {
             if (!in_array($methodVertex->getName(), $exclude)) {
                 $this->getGraph()->addEdge($impl, $methodVertex);
@@ -102,13 +104,14 @@ abstract class MethodLevelHelper extends AbstractState
      *
      * @param string $called
      * @param string $method
+     *
      * @return null|array null if cannot determine vertex or an array of vertices (can be empty if no call must be made)
      */
     protected function getCalledMethodVertexOn($called, $method)
     {
         // skipping $this :
         if ($called == 'this') {
-            return array();  // nothing to call
+            return [];  // nothing to call
         }
 
         // checking if the called is a method param
@@ -122,12 +125,12 @@ abstract class MethodLevelHelper extends AbstractState
         if (false !== $idx) {
             $param = $this->currentMethodNode->params[$idx];
             // is it a typed param ?
-            if ($param->type instanceof \PHPParser_Node_Name) {
-                $paramType = (string) $this->fileState->resolveClassName($param->type);
+            if ($param->type instanceof Name) {
+                $paramType = (string)$this->fileState->resolveClassName($param->type);
                 // we check if it is an outer class or not : is it known ?
                 if (!is_null($cls = $this->findMethodInInheritanceTree($paramType, $method))) {
                     if (!is_null($signature = $this->findVertex('method', "$cls::$method"))) {
-                        return array($signature);
+                        return [$signature];
                     }
                 }
             }
@@ -156,12 +159,12 @@ abstract class MethodLevelHelper extends AbstractState
      * Add an edge from current implementation to the class which a new instance
      * is created
      *
-     * @param \PHPParser_Node_Expr_New $node
+     * @param Expr\New_ $node
      */
-    protected function enterNewInstance(Node\Expr\New_ $node)
+    protected function enterNewInstance(Expr\New_ $node)
     {
-        if ($node->class instanceof Node\Name) {
-            $classVertex = $this->findVertex('class', (string) $this->fileState->resolveClassName($node->class));
+        if ($node->class instanceof Name) {
+            $classVertex = $this->findVertex('class', (string)$this->fileState->resolveClassName($node->class));
             if (!is_null($classVertex)) {
                 $impl = $this->findVertex('impl', $this->currentFqcn . '::' . $this->currentMethodNode->name);
                 $this->getGraph()->addEdge($impl, $classVertex);
@@ -169,11 +172,11 @@ abstract class MethodLevelHelper extends AbstractState
         }
     }
 
-    protected function enterStaticCall(Node\Expr\StaticCall $node)
+    protected function enterStaticCall(Expr\StaticCall $node)
     {
-        if (($node->class instanceof Node\Name) && is_string($node->name)) {
+        if (($node->class instanceof Name) && is_string($node->name)) {
             $impl = $this->findVertex('impl', $this->currentFqcn . '::' . $this->currentMethodNode->name);
-            $target = $this->findVertex('method', (string) $this->fileState->resolveClassName($node->class) . '::' . $node->name);
+            $target = $this->findVertex('method', (string)$this->fileState->resolveClassName($node->class) . '::' . $node->name);
             if (!is_null($target)) {
                 $this->getGraph()->addEdge($impl, $target);
             }

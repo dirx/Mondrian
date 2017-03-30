@@ -7,7 +7,6 @@
 namespace Trismegiste\Mondrian\Tests\Transform\Vertex;
 
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
-use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\StaticAnalysis;
 
 /**
@@ -27,7 +26,7 @@ class ClassVertexTest extends \PHPUnit_Framework_TestCase
     {
         $vertex = new ClassVertex('Full\Qualified\Class\Name\Sample');
         $attr = $vertex->getAttribute();
-        $this->assertEquals("FQCN".StaticAnalysis::LABEL_DELIMITER."Sample", $attr['label']);
+        $this->assertEquals("FQCN" . StaticAnalysis::LABEL_DELIMITER . "Sample", $attr['label']);
     }
 
 }

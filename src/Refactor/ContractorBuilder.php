@@ -18,14 +18,14 @@ class ContractorBuilder extends RefactoringBuilder
 
     public function buildCollectors()
     {
-        return array(
+        return [
             // finds which class must be refactored (and add inheritance)
             new Visitor\NewContractCollector($this->context),
             // replaces the parameters types with the interface
             new Visitor\ParamRefactor($this->context),
             // creates the new interface file
-            new Visitor\InterfaceExtractor($this->context, $this->dumper)
-        );
+            new Visitor\InterfaceExtractor($this->context, $this->dumper),
+        ];
     }
 
     public function buildContext()

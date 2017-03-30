@@ -21,7 +21,7 @@ class DoNothingTest extends RefactorTemplate
     {
         parent::setUp();
         $this->coder = new Linking(
-                new Builder(), new ContractorBuilder($this->dumper));
+            new Builder(), new ContractorBuilder($this->dumper));
     }
 
     /**
@@ -29,7 +29,7 @@ class DoNothingTest extends RefactorTemplate
      */
     public function testGeneration()
     {
-        $this->dumper->init(array('Nothing.php'), $this->never());
+        $this->dumper->init(['Nothing.php'], $this->never());
 
         $this->coder->run($this->dumper->getIterator());
         $this->assertCount(1, $this->dumper->getIterator());

@@ -6,9 +6,9 @@
 
 namespace Trismegiste\Mondrian\Tests\Graph;
 
-use Trismegiste\Mondrian\Graph\Vertex;
-use Trismegiste\Mondrian\Graph\PrettyPrint;
 use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\PrettyPrint;
+use Trismegiste\Mondrian\Graph\Vertex;
 
 /**
  * PrettyPrintTest is a test for the PrettyPrint decorator
@@ -30,14 +30,14 @@ class PrettyPrintTest extends \PHPUnit_Framework_TestCase
 
     public function testEmpty()
     {
-        $str = (string) $this->graph;
+        $str = (string)$this->graph;
         $this->assertEquals('', $str);
     }
 
     public function testSimple()
     {
         $this->graph->addEdge(new Vertex('a'), new Vertex('b'));
-        $str = (string) $this->graph;
+        $str = (string)$this->graph;
         $this->assertStringStartsWith('Vertex : a', $str);
     }
 

@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Plugin;
 
-use Trismegiste\Mondrian\Plugin;
 use Symfony\Component\Console\Tester\CommandTester;
+use Trismegiste\Mondrian\Plugin;
 
 /**
  * AboutTest tests the About command
@@ -30,9 +30,9 @@ class AboutTest extends \PHPUnit_Framework_TestCase
     {
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
-            'command' => $command->getName()
-        ));
+        $commandTester->execute([
+            'command' => $command->getName(),
+        ]);
 
         // return the output for further tests
         $out = $commandTester->getDisplay();

@@ -6,21 +6,28 @@
 
 namespace Trismegiste\Mondrian\Parser;
 
-use PHPParser_NodeAbstract;
+use PhpParser\Node;
+use PhpParser\NodeAbstract;
 
 /**
  * PhpFile is a node in a package repreenting a file
  *
  */
-class PhpFile extends PHPParser_NodeAbstract
+class PhpFile extends NodeAbstract
 {
-
     protected $absPathName;
+
+    /**
+     * @var Node[] Statements
+     */
+    public $stmts;
 
     public function __construct($path, array $stmts, $newFile = false)
     {
-        $this->absPathName = (string) $path;
-        parent::__construct($stmts, array('modified' => $newFile));
+        $this->absPathName = (string)$path;
+
+        parent::__construct(['modified' => $newFile]);
+        $this->stmts = $stmts;
     }
 
     public function getType()
@@ -43,4 +50,8 @@ class PhpFile extends PHPParser_NodeAbstract
         $this->setAttribute('modified', true);
     }
 
+    public function getSubNodeNames()
+    {
+        return ['stmts'];
+    }
 }

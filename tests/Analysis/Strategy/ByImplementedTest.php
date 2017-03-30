@@ -7,11 +7,10 @@
 namespace Trismegiste\Mondrian\Tests\Analysis\Strategy;
 
 use Trismegiste\Mondrian\Analysis\Strategy\ByImplemented;
-use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
-use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Graph\Edge;
-use Trismegiste\Mondrian\Graph\Vertex;
+use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
+use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 
 /**
  * ByImplementedTest is a unit test for ByConnection strategy
@@ -29,7 +28,7 @@ class ByImplementedTest extends TestTemplate
      */
     public function testDirect($src, $dst)
     {
-        $this->strategy->collapseEdge($src, $dst, array(new Edge($src, $dst)));
+        $this->strategy->collapseEdge($src, $dst, [new Edge($src, $dst)]);
         $this->assertCount(0, $this->result->getVertexSet());
     }
 

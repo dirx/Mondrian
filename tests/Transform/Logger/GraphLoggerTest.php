@@ -23,23 +23,23 @@ class GraphLoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testEmpty()
     {
-        $this->assertEquals(array('graph' => array('calling' => array())), $this->logger->getDigest());
+        $this->assertEquals(['graph' => ['calling' => []]], $this->logger->getDigest());
     }
 
     public function testAdding()
     {
         $this->logger->logCallTo('A::b', 'C::d');
-        $this->assertEquals(array(
-            'graph' => array(
-                'calling' => array(
-                    'A::b' => array(
-                        'ignore' => array(
-                            'C::d'
-                        )
-                    )
-                )
-            )
-                ), $this->logger->getDigest());
+        $this->assertEquals([
+            'graph' => [
+                'calling' => [
+                    'A::b' => [
+                        'ignore' => [
+                            'C::d',
+                        ],
+                    ],
+                ],
+            ],
+        ], $this->logger->getDigest());
     }
 
     public function testDoubleAdding()
@@ -47,7 +47,7 @@ class GraphLoggerTest extends \PHPUnit_Framework_TestCase
         $this->logger->logCallTo('A::b', 'C::d');
         $this->logger->logCallTo('A::b', 'C::d');
         $report = $this->logger->getDigest();
-        $this->assertEquals(array('C::d'), $report['graph']['calling']['A::b']['ignore']);
+        $this->assertEquals(['C::d'], $report['graph']['calling']['A::b']['ignore']);
     }
 
     public function testSortOnMethod()

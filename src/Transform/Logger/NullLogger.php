@@ -14,7 +14,7 @@ class NullLogger implements LoggerInterface
 
     public function logCallTo($callee, $called)
     {
-        
+
     }
 
 }

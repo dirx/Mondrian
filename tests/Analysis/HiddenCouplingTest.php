@@ -37,7 +37,7 @@ class HiddenCouplingTest extends \PHPUnit_Framework_TestCase
         $dc = new Vertex\ClassVertex('B');
         $mth = new Vertex\MethodVertex('B::callee');
 
-        return array(array($cc, $impl, $dc, $mth));
+        return [[$cc, $impl, $dc, $mth]];
     }
 
     /**
@@ -72,7 +72,7 @@ class HiddenCouplingTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getSourceCode
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testBadGraph1($callingClass, $impl, $declaring, $callee)
     {
@@ -84,7 +84,7 @@ class HiddenCouplingTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getSourceCode
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testBadGraph2($callingClass, $impl, $declaring, $callee)
     {

@@ -21,7 +21,7 @@ class About extends Command
     public function configure()
     {
         $this->setName('about')
-                ->setDescription("=> You are lost ? Start with this command (^o^)");
+            ->setDescription("=> You are lost ? Start with this command (^o^)");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -13,7 +13,9 @@ use Trismegiste\Mondrian\Algebra\ByteMatrix;
  */
 class ByteMatrixTest extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * @var ByteMatrix
+     */
     protected $matrix;
 
     protected function setUp()

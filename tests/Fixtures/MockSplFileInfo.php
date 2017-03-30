@@ -11,7 +11,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * MockSplFileInfo is a fake SplFileInfo since PHP >= 5.4.29 decides
  * suddenly to not support unserialize with SplFileInfo.
- * 
+ *
  * https://bugs.php.net/bug.php?id=67072
  * https://github.com/padraic/mockery/issues/348
  */

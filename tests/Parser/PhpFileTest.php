@@ -18,7 +18,7 @@ class PhpFileTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->obj = new PhpFile('abc', array());
+        $this->obj = new PhpFile('abc', []);
     }
 
     public function testDefault()

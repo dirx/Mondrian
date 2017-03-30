@@ -8,9 +8,9 @@ namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Parser\PhpDumper;
 use Trismegiste\Mondrian\Builder\Linking;
 use Trismegiste\Mondrian\Builder\Statement\Builder;
+use Trismegiste\Mondrian\Parser\PhpDumper;
 use Trismegiste\Mondrian\Refactor\ContractorBuilder;
 
 /**
@@ -27,13 +27,13 @@ class ContractorCommand extends RefactorCommand
         parent::configure();
 
         $this->setName('refactor:abstract')
-                ->setDescription('Scans a directory and refactors classes with annotations');
+            ->setDescription('Scans a directory and refactors classes with annotations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $compil = new Linking(
-                new Builder(), new ContractorBuilder(new PhpDumper()));
+            new Builder(), new ContractorBuilder(new PhpDumper()));
 
         $compil->run($this->phpfinder->getIterator());
     }

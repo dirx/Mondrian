@@ -20,13 +20,13 @@ interface Matrix
     public function getSize();
 
     /**
-     * Get  coefficient in this matrix
+     * Get coefficient in this matrix
      * Use the algebra order line x column
      *
      * @param int $line
      * @param int $column
      *
-     * @return numeric
+     * @return int|float
      */
     public function get($line, $column);
 
@@ -35,7 +35,7 @@ interface Matrix
      *
      * @param int $line
      * @param int $column
-     * @param numeric $value
+     * @param float $value
      */
     public function set($line, $column, $value);
 }

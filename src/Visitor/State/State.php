@@ -16,16 +16,16 @@ interface State
 
     /**
      * Enters into the node
-     * 
+     *
      * @param \PhpParser\Node $node
-     * 
+     *
      * @return see NodeVisitorAbstract
      */
     public function enter(Node $node);
 
     /**
      * leaves the node
-     * 
+     *
      * @param \PhpParser\Node $node
      *
      * @return see NodeVisitorAbstract
@@ -34,8 +34,8 @@ interface State
 
     /**
      * Sets the common context for the State Pattern
-     * 
-     * @param \Trismegiste\Mondrian\Visitor\State\VisitorContext $ctx
+     *
+     * @param VisitorContext $ctx
      */
     public function setContext(VisitorContext $ctx);
 

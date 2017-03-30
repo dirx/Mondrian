@@ -34,11 +34,11 @@ abstract class TestTemplate extends \PHPUnit_Framework_TestCase
 
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'dir' => __DIR__ . '/../Fixtures/Project',
-            'report' => $fch
-        ));
+            'report' => $fch,
+        ]);
         // test the generated graphviz file
         $ptr = fopen($fch . '.dot', 'r');
         $heading = fgets($ptr);

@@ -7,10 +7,11 @@
 namespace Trismegiste\Mondrian\Analysis;
 
 use Trismegiste\Mondrian\Graph\BreadthFirstSearch;
-use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
-use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
+use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
+use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\InterfaceVertex;
+use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
 use Trismegiste\Mondrian\Transform\Vertex\TraitVertex;
 
 /**
@@ -59,11 +60,12 @@ class HiddenCoupling extends BreadthFirstSearch implements Generator
      */
     public function createReducedGraph()
     {
-        $reducedGraph = new \Trismegiste\Mondrian\Graph\Digraph();
+        $reducedGraph = new Digraph();
         $dependency = $this->getEdgeSet();
         foreach ($dependency as $edge) {
             if (($edge->getSource() instanceof ImplVertex) &&
-                    ($edge->getTarget() instanceof MethodVertex)) {
+                ($edge->getTarget() instanceof MethodVertex)
+            ) {
 
                 $this->resetVisited();
                 $edge->visited = true;
@@ -74,9 +76,9 @@ class HiddenCoupling extends BreadthFirstSearch implements Generator
                     // source is impl and target is method
                     $reducedGraph->addEdge($edge->getSource(), $edge->getTarget());
                     $reducedGraph->addEdge(
-                            $this->findOwningClassVertex($edge->getSource()), $edge->getSource());
+                        $this->findOwningClassVertex($edge->getSource()), $edge->getSource());
                     $reducedGraph->addEdge(
-                            $this->findDeclaringVertex($edge->getTarget()), $edge->getTarget());
+                        $this->findDeclaringVertex($edge->getTarget()), $edge->getTarget());
                 }
             }
         }
@@ -89,7 +91,8 @@ class HiddenCoupling extends BreadthFirstSearch implements Generator
         list($className, $methodName) = explode('::', $impl->getName());
         foreach ($this->graph->getSuccessor($impl) as $succ) {
             if ((($succ instanceof ClassVertex) || ($succ instanceof TraitVertex)) &&
-                    ($succ->getName() == $className)) {
+                ($succ->getName() == $className)
+            ) {
 
                 return $succ;
             }

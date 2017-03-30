@@ -19,7 +19,7 @@ class Cycle extends Tarjan
 
     public function getPartition()
     {
-        $filtered = array();
+        $filtered = [];
         if (is_null($this->scc)) {
             $this->scc = $this->getStronglyConnected();
         }

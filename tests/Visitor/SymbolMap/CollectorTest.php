@@ -6,10 +6,17 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor\SymbolMap;
 
-use Trismegiste\Mondrian\Visitor\SymbolMap\Collector;
-use Trismegiste\Mondrian\Transform\ReflectionContext;
+use PhpParser\Lexer;
+use PhpParser\NodeTraverser;
+use PhpParser\Parser\Multiple;
+use PhpParser\Parser\Php5;
+use PhpParser\Parser\Php7;
+use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Parser\PackageParser;
 use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
+use Trismegiste\Mondrian\Visitor\SymbolMap\Collector;
 
 /**
  * CollectorTest is a test for the visitor SymbolMap\Collector
@@ -17,7 +24,7 @@ use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
 class CollectorTest extends \PHPUnit_Framework_TestCase
 {
 
-    protected $symbol = array();
+    protected $symbol = [];
     protected $visitor;
     protected $context;
     protected $parser;
@@ -26,13 +33,18 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->context = new ReflectionContext();
-        $mockGraphCtx = $this->getMockBuilder('Trismegiste\Mondrian\Transform\GraphContext')
-                ->disableOriginalConstructor()
-                ->getMock();
-        $mockGraph = $this->getMock('Trismegiste\Mondrian\Graph\Graph');
+        $mockGraphCtx = $this->getMockBuilder(GraphContext::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockGraph = $this->createMock(Graph::class);
         $this->visitor = new Collector($this->context, $mockGraphCtx, $mockGraph);
-        $this->parser = new PackageParser(new \PHPParser_Parser(new \PHPParser_Lexer()));
-        $this->traverser = new \PHPParser_NodeTraverser();
+        $this->parser = new PackageParser(
+            new Multiple([
+                new Php5(new Lexer()),
+                new Php7(new Lexer()),
+            ])
+        );
+        $this->traverser = new NodeTraverser();
         $this->traverser->addVisitor($this->visitor);
     }
 
@@ -48,103 +60,103 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
         $stmts = $this->parser->parse(new \ArrayIterator($iter));
         $this->traverser->traverse($stmts);
-        $this->visitor->afterTraverse(array());
+        $this->visitor->afterTraverse([]);
     }
 
     public function testSimpleCase()
     {
         $this->scanFile(['Concrete.php']);
 
-        $this->assertAttributeEquals(array(
-            'Project\\Concrete' => array(
+        $this->assertAttributeEquals([
+            'Project\\Concrete' => [
                 'type' => 'c',
-                'parent' => array(),
-                'method' => array('simple' => 'Project\\Concrete'),
-                'use' => []
-            ),
-                ), 'inheritanceMap', $this->context);
+                'parent' => [],
+                'method' => ['simple' => 'Project\\Concrete'],
+                'use' => [],
+            ],
+        ], 'inheritanceMap', $this->context);
     }
 
     public function testExternalInterfaceInheritance()
     {
         $this->scanFile(['InheritExtra.php']);
 
-        $this->assertAttributeEquals(array(
-            'Project\\InheritExtra' => array(
+        $this->assertAttributeEquals([
+            'Project\\InheritExtra' => [
                 'type' => 'c',
-                'parent' => array(0 => 'IteratorAggregate'),
-                'method' => array('getIterator' => 'IteratorAggregate'),
-                'use' => []
-            ),
-            'IteratorAggregate' => array(
+                'parent' => [0 => 'IteratorAggregate'],
+                'method' => ['getIterator' => 'IteratorAggregate'],
+                'use' => [],
+            ],
+            'IteratorAggregate' => [
                 'type' => 'i',
-                'parent' => array(),
-                'method' => array(),
-                'use' => []
-            ),
-                ), 'inheritanceMap', $this->context);
+                'parent' => [],
+                'method' => [],
+                'use' => [],
+            ],
+        ], 'inheritanceMap', $this->context);
     }
 
     public function testAliasing()
     {
         $this->scanFile(['Alias1.php', 'Alias2.php']);
 
-        $this->assertAttributeEquals(array(
-            'Project\\Aliasing' => array(
+        $this->assertAttributeEquals([
+            'Project\\Aliasing' => [
                 'type' => 'c',
-                'parent' => array('Project\Maid', 'Project\Peril'),
-                'method' => array('spokes' => 'Project\\Aliasing'),
-                'use' => []
-            ),
-            'Project\Maid' => array(
+                'parent' => ['Project\Maid', 'Project\Peril'],
+                'method' => ['spokes' => 'Project\\Aliasing'],
+                'use' => [],
+            ],
+            'Project\Maid' => [
                 'type' => 'c',
-                'parent' => array(),
-                'method' => array(),
-                'use' => []
-            ),
-            'Project\Peril' => array(
+                'parent' => [],
+                'method' => [],
+                'use' => [],
+            ],
+            'Project\Peril' => [
                 'type' => 'i',
-                'parent' => array(),
-                'method' => array(),
-                'use' => []
-            )
-                ), 'inheritanceMap', $this->context);
+                'parent' => [],
+                'method' => [],
+                'use' => [],
+            ],
+        ], 'inheritanceMap', $this->context);
     }
 
     public function testSimpleTrait()
     {
         $this->scanFile(['SimpleTrait.php']);
 
-        $this->assertAttributeEquals(array(
-            'Project\\SimpleTrait' => array(
+        $this->assertAttributeEquals([
+            'Project\\SimpleTrait' => [
                 'type' => 't',
                 'parent' => [],
                 'method' => ['someService' => 'Project\\SimpleTrait'],
-                'use' => []
-            )
-                ), 'inheritanceMap', $this->context);
+                'use' => [],
+            ],
+        ], 'inheritanceMap', $this->context);
     }
 
     public function testImportingMethodFromTrait()
     {
         $this->scanFile([
             'ServiceWrong.php',
-            'ServiceTrait.php'
+            'ServiceTrait.php',
         ]);
 
-        $this->assertAttributeEquals(array(
-            'Project\\ServiceWrong' => array(
+        $this->assertAttributeEquals([
+            'Project\\ServiceWrong' => [
                 'type' => 'c',
                 'parent' => [],
-                'method' => array('someService' => 'Project\\ServiceWrong'),
-                'use' => ['Project\\ServiceTrait']
-            ),
-            'Project\\ServiceTrait' => array(
+                'method' => ['someService' => 'Project\\ServiceWrong'],
+                'use' => ['Project\\ServiceTrait'],
+            ],
+            'Project\\ServiceTrait' => [
                 'type' => 't',
                 'parent' => [],
-                'method' => array('someService' => 'Project\\ServiceTrait'),
-                'use' => []
-            )), 'inheritanceMap', $this->context);
+                'method' => ['someService' => 'Project\\ServiceTrait'],
+                'use' => [],
+            ]], 'inheritanceMap', $this->context);
     }
 
     public function testImportingMethodFromTraitWithInterfaceCollision()
@@ -152,83 +164,83 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
         $this->scanFile([
             'ServiceRight.php',
             'ServiceTrait.php',
-            'ServiceInterface.php'
+            'ServiceInterface.php',
         ]);
 
-        $this->assertAttributeEquals(array(
-            'Project\\ServiceRight' => array(
+        $this->assertAttributeEquals([
+            'Project\\ServiceRight' => [
                 'type' => 'c',
                 'parent' => ['Project\\ServiceInterface'],
-                'method' => array('someService' => 'Project\\ServiceInterface'),
-                'use' => ['Project\\ServiceTrait']
-            ),
-            'Project\\ServiceInterface' => array(
+                'method' => ['someService' => 'Project\\ServiceInterface'],
+                'use' => ['Project\\ServiceTrait'],
+            ],
+            'Project\\ServiceInterface' => [
                 'type' => 'i',
                 'parent' => [],
-                'method' => array('someService' => 'Project\\ServiceInterface'),
-                'use' => []
-            ),
-            'Project\\ServiceTrait' => array(
+                'method' => ['someService' => 'Project\\ServiceInterface'],
+                'use' => [],
+            ],
+            'Project\\ServiceTrait' => [
                 'type' => 't',
                 'parent' => [],
-                'method' => array('someService' => 'Project\\ServiceTrait'),
-                'use' => []
-            )), 'inheritanceMap', $this->context);
+                'method' => ['someService' => 'Project\\ServiceTrait'],
+                'use' => [],
+            ]], 'inheritanceMap', $this->context);
     }
 
     public function testInterfaceExtends()
     {
         $this->scanFile(['Interface.php']);
 
-        $this->assertAttributeEquals(array(
-            'Project\\IOne' => array(
+        $this->assertAttributeEquals([
+            'Project\\IOne' => [
                 'type' => 'i',
                 'parent' => [],
                 'method' => [],
-                'use' => []
-            ),
-            'Project\\ITwo' => array(
+                'use' => [],
+            ],
+            'Project\\ITwo' => [
                 'type' => 'i',
                 'parent' => [],
                 'method' => [],
-                'use' => []
-            ),
-            'Project\\IThree' => array(
+                'use' => [],
+            ],
+            'Project\\IThree' => [
                 'type' => 'i',
                 'parent' => ['Project\ITwo'],
                 'method' => [],
-                'use' => []
-            ),
-            'Project\\Multiple' => array(
+                'use' => [],
+            ],
+            'Project\\Multiple' => [
                 'type' => 'i',
                 'parent' => ['Project\IOne', 'Project\ITwo'],
                 'method' => [],
-                'use' => []
-            ),
-                ), 'inheritanceMap', $this->context);
+                'use' => [],
+            ],
+        ], 'inheritanceMap', $this->context);
     }
 
     public function testTraitUsingTrait()
     {
         $this->scanFile([
             'ServiceUsingTrait.php',
-            'ServiceTrait.php'
+            'ServiceTrait.php',
         ]);
 
-        $this->assertAttributeEquals(array(
-            'Project\\ServiceUsingTrait' => array(
+        $this->assertAttributeEquals([
+            'Project\\ServiceUsingTrait' => [
                 'type' => 't',
                 'parent' => [],
                 //    'method' => array('someService' => 'Project\\ServiceTrait'),
                 'method' => [],
-                'use' => ['Project\\ServiceTrait']
-            ),
-            'Project\\ServiceTrait' => array(
+                'use' => ['Project\\ServiceTrait'],
+            ],
+            'Project\\ServiceTrait' => [
                 'type' => 't',
                 'parent' => [],
-                'method' => array('someService' => 'Project\\ServiceTrait'),
-                'use' => []
-            )), 'inheritanceMap', $this->context);
+                'method' => ['someService' => 'Project\\ServiceTrait'],
+                'use' => [],
+            ]], 'inheritanceMap', $this->context);
 
         $this->markTestIncomplete(); // @todo the commented line above must be incommented
         // I will not create vertex for imported implementation from trait in a trait 

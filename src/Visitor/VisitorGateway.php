@@ -6,15 +6,15 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
-use PhpParser\NodeVisitorAbstract;
 use PhpParser\Node;
-use Trismegiste\Mondrian\Transform\ReflectionContext;
-use Trismegiste\Mondrian\Transform\GraphContext;
+use PhpParser\NodeVisitorAbstract;
 use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\GraphContext;
+use Trismegiste\Mondrian\Transform\ReflectionContext;
 
 /**
  * VisitorGateway is a multiple patterns for chaining visitors
- * 
+ *
  * CoR / State / Visitor
  */
 class VisitorGateway extends NodeVisitorAbstract implements State\VisitorContext
@@ -36,7 +36,7 @@ class VisitorGateway extends NodeVisitorAbstract implements State\VisitorContext
 
     /**
      * Ctor
-     * 
+     *
      * @param array $visitor a list of State
      */
     public function __construct(array $visitor, ReflectionContext $ref, GraphContext $grf, Graph $g)
@@ -59,7 +59,7 @@ class VisitorGateway extends NodeVisitorAbstract implements State\VisitorContext
         $this->stateStack[0] = [
             'node' => null,
             'state' => $visitor[0],
-            'key' => $visitor[0]->getName()
+            'key' => $visitor[0]->getName(),
         ];
     }
 
@@ -99,7 +99,7 @@ class VisitorGateway extends NodeVisitorAbstract implements State\VisitorContext
             'node' => $node,
             'state' => $state,
             'key' => $state->getName(),
-            'nodeType' => $node->getType()
+            'nodeType' => $node->getType(),
         ]);
     }
 

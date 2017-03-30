@@ -6,17 +6,21 @@
 
 namespace Trismegiste\Mondrian\Parser;
 
+use PhpParser\BuilderAbstract;
+use PhpParser\Node;
+use PhpParser\Node\Stmt;
+
 /**
  * PhpFileBuilder is a builder for a PhpFile node :
  * Enforces the PSR-0 : one class per file
  */
-class PhpFileBuilder extends \PHPParser_BuilderAbstract
+class PhpFileBuilder extends BuilderAbstract
 {
 
     protected $filename;
     protected $fileNamespace = false;
     protected $theClass = null;
-    protected $useList = array();
+    protected $useList = [];
 
     public function __construct($absPath)
     {
@@ -25,7 +29,7 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
 
     public function getNode()
     {
-        $stmts = array();
+        $stmts = [];
         if ($this->fileNamespace) {
             $stmts[] = $this->fileNamespace;
         }
@@ -42,16 +46,16 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
     /**
      * Declares a class or an interface
      *
-     * @param mixed $stmt a Node_Stmt or a Node_Builder
+     * @param Node|Builder
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return PhpFileBuilder this instance
      *
      * @throws \InvalidArgumentException
      */
     public function declaring($stmt)
     {
         $node = $this->normalizeNode($stmt);
-        if (in_array($node->getType(), array('Stmt_Class', 'Stmt_Interface'))) {
+        if (in_array($node->getType(), ['Stmt_Class', 'Stmt_Interface'])) {
             $this->theClass = $node;
         } else {
             throw new \InvalidArgumentException("Invalid node expected type " . $node->getType());
@@ -65,12 +69,12 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
      *
      * @param string $str
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return $this
      */
     public function ns($str)
     {
-        $this->fileNamespace = new \PHPParser_Node_Stmt_Namespace(
-                        new \PHPParser_Node_Name((string) $str));
+        $this->fileNamespace = new Stmt\Namespace_(
+            new Node\Name((string)$str));
 
         return $this;
     }
@@ -80,15 +84,15 @@ class PhpFileBuilder extends \PHPParser_BuilderAbstract
      *
      * @param string $str
      *
-     * @return \Trismegiste\Mondrian\Parser\PhpFileBuilder this instance
+     * @return $this
      */
     public function addUse($str)
     {
-        $this->useList[] = new \PHPParser_Node_Stmt_Use(
-                        array(
-                            new \PHPParser_Node_Stmt_UseUse(
-                                    new \PHPParser_Node_Name(
-                                            (string) $str))));
+        $this->useList[] = new Stmt\Use_(
+            [
+                new Stmt\UseUse(
+                    new Node\Name(
+                        (string)$str))]);
 
         return $this;
     }

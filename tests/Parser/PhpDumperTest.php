@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Tests\Parser;
 
+use PhpParser\Node\Stmt\Class_;
 use Trismegiste\Mondrian\Parser\PhpDumper;
 use Trismegiste\Mondrian\Parser\PhpFile;
 
@@ -17,10 +18,10 @@ class PhpDumperTest extends \PHPUnit_Framework_TestCase
 
     public function getNode()
     {
-        return array(array(
-                sys_get_temp_dir() . '/2del' . time() . '.php',
-                new \PHPParser_Node_Stmt_Class('Trash')
-        ));
+        return [[
+            sys_get_temp_dir() . '/2del' . time() . '.php',
+            new Class_('Trash'),
+        ]];
     }
 
     /**
@@ -29,7 +30,7 @@ class PhpDumperTest extends \PHPUnit_Framework_TestCase
     public function testWrite($dest, $node)
     {
         $dump = new PhpDumper();
-        $dump->write(new PhpFile($dest, array($node)));
+        $dump->write(new PhpFile($dest, [$node]));
         $this->assertFileExists($dest);
     }
 

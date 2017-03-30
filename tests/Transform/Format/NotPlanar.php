@@ -4,10 +4,10 @@ namespace Trismegiste\Mondrian\Tests\Transform\Format;
 
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Transform\Vertex\ClassVertex;
-use Trismegiste\Mondrian\Transform\Vertex\TraitVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
 use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ParamVertex;
+use Trismegiste\Mondrian\Transform\Vertex\TraitVertex;
 
 /**
  * Fixture : non-planar digraph
@@ -34,7 +34,7 @@ class NotPlanar extends Digraph
 
     public function getPartition()
     {
-        return array($this->getVertexSet());
+        return [$this->getVertexSet()];
     }
 
 }

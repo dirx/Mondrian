@@ -6,8 +6,15 @@
 
 namespace Trismegiste\Mondrian\Tests\Visitor;
 
-use Trismegiste\Mondrian\Visitor\InterfaceExtractor;
+use PhpParser\Comment;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Namespace_;
 use Trismegiste\Mondrian\Parser\PhpFile;
+use Trismegiste\Mondrian\Parser\PhpPersistence;
+use Trismegiste\Mondrian\Refactor\Refactored;
+use Trismegiste\Mondrian\Visitor\InterfaceExtractor;
 
 /**
  * InterfaceExtractorTest tests for InterfaceExtractor
@@ -19,21 +26,13 @@ class InterfaceExtractorTest extends \PHPUnit_Framework_TestCase
     protected $context;
     protected $dumper;
 
-    protected function setUp()
-    {
-        $this->dumper = $this->getMockForAbstractClass('Trismegiste\Mondrian\Parser\PhpPersistence');
-        $this->context = $this->getMockBuilder('Trismegiste\Mondrian\Refactor\Refactored')
-                ->getMock();
-        $this->visitor = new InterfaceExtractor($this->context, $this->dumper);
-    }
-
     public function getSimpleClass()
     {
-        return array(array(
-                new \PHPParser_Node_Stmt_Class('Systematic', array(), array(
-                    'comments' => array(new \PHPParser_Comment('@mondrian contractor Chaos'))
-                        ))
-        ));
+        return [[
+            new Class_('Systematic', [], [
+                'comments' => [new Comment('@mondrian contractor Chaos')],
+            ]),
+        ]];
     }
 
     /**
@@ -52,24 +51,24 @@ class InterfaceExtractorTest extends \PHPUnit_Framework_TestCase
     public function testNoGeneration($node)
     {
         $this->dumper->expects($this->never())
-                ->method('write')
-                ->will($this->returnCallback(array($this, 'stubbedTestedWrite')));
+            ->method('write')
+            ->will($this->returnCallback([$this, 'stubbedTestedWrite']));
 
         $this->assertAttributeEquals(false, 'newInterface', $this->visitor);
-        $this->visitor->beforeTraverse(array());
-        $this->assertAttributeEquals(array(), 'newContent', $this->visitor);
+        $this->visitor->beforeTraverse([]);
+        $this->assertAttributeEquals([], 'newContent', $this->visitor);
         // start traversing but not enter in class
         $this->visitor->leaveNode($node);
         // does not generate a write
-        $this->visitor->afterTraverse(array());
+        $this->visitor->afterTraverse([]);
     }
 
     public function testDoNothingForCC()
     {
-        $node = new \PHPParser_Node_Stmt_Interface('Dummy', array(
-            'stmts' => new \PHPParser_Node_Stmt_ClassMethod('dummy')
-        ));
-        $this->visitor->beforeTraverse(array($node));
+        $node = new Interface_('Dummy', [
+            'stmts' => new ClassMethod('dummy'),
+        ]);
+        $this->visitor->beforeTraverse([$node]);
         $this->visitor->enterNode($node);
     }
 
@@ -79,14 +78,14 @@ class InterfaceExtractorTest extends \PHPUnit_Framework_TestCase
     public function testGeneration($node)
     {
         $this->dumper->expects($this->once())
-                ->method('write')
-                ->will($this->returnCallback(array($this, 'stubbedTestedWrite')));
+            ->method('write')
+            ->will($this->returnCallback([$this, 'stubbedTestedWrite']));
 
-        $this->visitor->enterNode(new \Trismegiste\Mondrian\Parser\PhpFile('/addicted/to/Systematic.php', array()));
+        $this->visitor->enterNode(new PhpFile('/addicted/to/Systematic.php', []));
         $this->visitor->enterNode($node);
-        $this->visitor->enterNode(new \PHPParser_Node_Stmt_ClassMethod('forsaken'));
+        $this->visitor->enterNode(new ClassMethod('forsaken'));
         $this->visitor->leaveNode($node);
-        $this->visitor->afterTraverse(array());
+        $this->visitor->afterTraverse([]);
 
         $this->assertAttributeNotEmpty('newContent', $this->visitor);
     }
@@ -94,23 +93,31 @@ class InterfaceExtractorTest extends \PHPUnit_Framework_TestCase
     public function stubbedTestedWrite(PhpFile $file)
     {
         $this->assertEquals('/addicted/to/Chaos.php', $file->getRealPath());
-        $generated = $file->getIterator();
+        $generated = $file->stmts;
         $this->assertCount(2, $generated);
-        $this->assertInstanceOf('\PHPParser_Node_Stmt_Namespace', $generated[0]);
-        $this->assertInstanceOf('\PHPParser_Node_Stmt_Interface', $generated[1]);
+        $this->assertInstanceOf(Namespace_::class, $generated[0]);
+        $this->assertInstanceOf(Interface_::class, $generated[1]);
         $interf = $generated[1]->stmts;
-        $this->assertInstanceOf('\PHPParser_Node_Stmt_ClassMethod', $interf[0]);
+        $this->assertInstanceOf(ClassMethod::class, $interf[0]);
         $this->assertEquals('forsaken', $interf[0]->name);
     }
 
     /**
      * @dataProvider getSimpleClass
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testBadUseOfVisitor($node)
     {
         $this->visitor->enterNode($node);
         $this->visitor->leaveNode($node);
+    }
+
+    protected function setUp()
+    {
+        $this->dumper = $this->getMockForAbstractClass(PhpPersistence::class);
+        $this->context = $this->getMockBuilder(Refactored::class)
+            ->getMock();
+        $this->visitor = new InterfaceExtractor($this->context, $this->dumper);
     }
 
 }

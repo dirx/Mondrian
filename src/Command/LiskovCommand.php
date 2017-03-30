@@ -7,8 +7,9 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Analysis\LiskovSearch;
+use Trismegiste\Mondrian\Analysis\UsedCentrality;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * LiskovCommand transforms a bunch of php files into a reduced digraph
@@ -32,7 +33,7 @@ class LiskovCommand extends AbstractParse
     {
         $algo = new LiskovSearch($graph);
         $result = $algo->createReducedGraph();
-        $central = new \Trismegiste\Mondrian\Analysis\UsedCentrality($result);
+        $central = new UsedCentrality($result);
         $central->decorate();
 
         return $result;

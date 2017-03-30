@@ -7,18 +7,18 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 use Trismegiste\Mondrian\Builder\Linking;
 use Trismegiste\Mondrian\Builder\Statement\Builder;
-use Trismegiste\Mondrian\Transform\GraphBuilder;
-use Trismegiste\Mondrian\Transform\Format\Factory;
-use Symfony\Component\Finder\Finder;
-use Trismegiste\Mondrian\Graph\Graph;
-use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Config\Helper;
+use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\Format\Factory;
+use Trismegiste\Mondrian\Transform\GraphBuilder;
 use Trismegiste\Mondrian\Transform\Logger\NullLogger;
 
 /**
@@ -56,12 +56,12 @@ abstract class AbstractParse extends Command
     protected function configure()
     {
         $this
-                ->setName($this->getSubname())
-                ->setDescription($this->getFullDesc())
-                ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
-                ->addArgument('report', InputArgument::OPTIONAL, 'The filename of the report', 'report')
-                ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', array('Tests', 'vendor'))
-                ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'Format of export', 'dot');
+            ->setName($this->getSubname())
+            ->setDescription($this->getFullDesc())
+            ->addArgument('dir', InputArgument::REQUIRED, 'The directory to explore')
+            ->addArgument('report', InputArgument::OPTIONAL, 'The filename of the report', 'report')
+            ->addOption('ignore', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Directories to ignore', ['Tests', 'vendor'])
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'Format of export', 'dot');
     }
 
     /**
@@ -121,9 +121,9 @@ abstract class AbstractParse extends Command
     {
         $scan = new Finder();
         $scan->files()
-                ->in($directory)
-                ->name('*.php')
-                ->exclude($ignoreDir);
+            ->in($directory)
+            ->name('*.php')
+            ->exclude($ignoreDir);
 
         return $scan;
     }

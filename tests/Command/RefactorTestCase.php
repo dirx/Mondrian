@@ -32,10 +32,10 @@ abstract class RefactorTestCase extends \PHPUnit_Framework_TestCase
     {
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
-            'dir' => __DIR__ . '/../Fixtures/Project'
-        ));
+            'dir' => __DIR__ . '/../Fixtures/Project',
+        ]);
 
         // return the output for further tests
         return $commandTester->getDisplay();

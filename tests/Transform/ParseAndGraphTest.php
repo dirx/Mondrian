@@ -6,13 +6,13 @@
 
 namespace Trismegiste\Mondrian\Tests\Transform;
 
+use Trismegiste\Mondrian\Builder\Linking;
+use Trismegiste\Mondrian\Builder\Statement\Builder;
 use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Graph\Graph;
-use Trismegiste\Mondrian\Builder\Linking;
-use Trismegiste\Mondrian\Transform\GraphBuilder;
-use Trismegiste\Mondrian\Builder\Statement\Builder;
-use Trismegiste\Mondrian\Transform\Logger\NullLogger;
 use Trismegiste\Mondrian\Tests\Fixtures\MockSplFileInfo;
+use Trismegiste\Mondrian\Transform\GraphBuilder;
+use Trismegiste\Mondrian\Transform\Logger\NullLogger;
 
 /**
  * ParseAndGraphTest tests for Grapher
@@ -25,16 +25,16 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $conf = array('calling' => array());
+        $conf = ['calling' => []];
 
         $this->graph = new Digraph();
         $this->compiler = new Linking(
-                new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
+            new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
     }
 
     protected function callParse()
     {
-        $iter = array();
+        $iter = [];
         foreach (func_get_args() as $name) {
             $mockedFile = new MockSplFileInfo($name, file_get_contents(__DIR__ . '/../Fixtures/Project/' . $name));
             $iter[] = $mockedFile;
@@ -56,15 +56,15 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
 
     public function getSimpleGraph()
     {
-        return array(
-            array('Inheritance.php', 4, 3),
-            array('Interface.php', 4, 3),
-            array('Concrete.php', 3, 3),
-            array('OutsideEdge.php', 4, 5),
-            array('OutsideSignature.php', 2, 2),
-            array('StaticCalling.php', 6, 7),
-            ['SimpleTrait.php', 2, 2]
-        );
+        return [
+            ['Inheritance.php', 4, 3],
+            ['Interface.php', 4, 3],
+            ['Concrete.php', 3, 3],
+            ['OutsideEdge.php', 4, 5],
+            ['OutsideSignature.php', 2, 2],
+            ['StaticCalling.php', 6, 7],
+            ['SimpleTrait.php', 2, 2],
+        ];
     }
 
     /**
@@ -92,33 +92,33 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
         $fqcnInterface = 'Project\ContractParam';
         $result = $this->callParse('NotConcreteParam.php', 'ContractParam.php');
         $this->assertCount(5, $result->getVertexSet());
-        $this->assertEdges(array(
-            array(
-                array('Class', $fqcnClass),
-                array('Interface', $fqcnInterface)
-            ),
-            array(
-                array('Class', $fqcnClass),
-                array('Impl', "$fqcnClass::setter")
-            ),
-            array(
-                array('Impl', "$fqcnClass::setter"),
-                array('Class', $fqcnClass)
-            ),
-            array(
-                array('Interface', $fqcnInterface),
-                array('Method', "$fqcnInterface::setter")
-            ),
-            array(
-                array('Method', "$fqcnInterface::setter"),
-                array('Param', "$fqcnInterface::setter/0")
-            ),
-            array(
-                array('Impl', "$fqcnClass::setter"),
-                array('Param', "$fqcnInterface::setter/0")
-            )
-                )
-                , $result);
+        $this->assertEdges([
+                [
+                    ['Class', $fqcnClass],
+                    ['Interface', $fqcnInterface],
+                ],
+                [
+                    ['Class', $fqcnClass],
+                    ['Impl', "$fqcnClass::setter"],
+                ],
+                [
+                    ['Impl', "$fqcnClass::setter"],
+                    ['Class', $fqcnClass],
+                ],
+                [
+                    ['Interface', $fqcnInterface],
+                    ['Method', "$fqcnInterface::setter"],
+                ],
+                [
+                    ['Method', "$fqcnInterface::setter"],
+                    ['Param', "$fqcnInterface::setter/0"],
+                ],
+                [
+                    ['Impl', "$fqcnClass::setter"],
+                    ['Param', "$fqcnInterface::setter/0"],
+                ],
+            ]
+            , $result);
     }
 
     protected function findVertex(Graph $g, $type, $name)
@@ -150,11 +150,11 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->testSimpleGraph('InheritExtra.php', 2, 2);
         $this->assertNotNull(
-                $this->findVertex(
-                        $result, "ClassVertex", 'Project\InheritExtra'));
+            $this->findVertex(
+                $result, "ClassVertex", 'Project\InheritExtra'));
         $this->assertNotNull(
-                $this->findVertex(
-                        $result, "ImplVertex", 'Project\InheritExtra::getIterator'));
+            $this->findVertex(
+                $result, "ImplVertex", 'Project\InheritExtra::getIterator'));
     }
 
     public function testDecoupledMethodWithTypedParam()
@@ -164,41 +164,41 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
         $fqcnOtherInterface = 'Project\Contract';
         $result = $this->callParse('NotConcreteTypedParam.php', 'ContractTypedParam.php', 'Contract.php');
         $this->assertCount(7, $result->getVertexSet());
-        $this->assertEdges(array(
-            array(
-                array('Class', $fqcnClass),
-                array('Interface', $fqcnInterface)
-            ),
-            array(
-                array('Class', $fqcnClass),
-                array('Impl', "$fqcnClass::setter")
-            ),
-            array(
-                array('Impl', "$fqcnClass::setter"),
-                array('Class', $fqcnClass)
-            ),
-            array(
-                array('Interface', $fqcnInterface),
-                array('Method', "$fqcnInterface::setter")
-            ),
-            array(
-                array('Method', "$fqcnInterface::setter"),
-                array('Param', "$fqcnInterface::setter/0")
-            ),
-            array(
-                array('Impl', "$fqcnClass::setter"),
-                array('Param', "$fqcnInterface::setter/0")
-            ),
-            array(
-                array('Param', "$fqcnInterface::setter/0"),
-                array('Interface', $fqcnOtherInterface)
-            ),
-            array(
-                array('Interface', $fqcnOtherInterface),
-                array('Method', "$fqcnOtherInterface::simple")
-            )
-                )
-                , $result);
+        $this->assertEdges([
+                [
+                    ['Class', $fqcnClass],
+                    ['Interface', $fqcnInterface],
+                ],
+                [
+                    ['Class', $fqcnClass],
+                    ['Impl', "$fqcnClass::setter"],
+                ],
+                [
+                    ['Impl', "$fqcnClass::setter"],
+                    ['Class', $fqcnClass],
+                ],
+                [
+                    ['Interface', $fqcnInterface],
+                    ['Method', "$fqcnInterface::setter"],
+                ],
+                [
+                    ['Method', "$fqcnInterface::setter"],
+                    ['Param', "$fqcnInterface::setter/0"],
+                ],
+                [
+                    ['Impl', "$fqcnClass::setter"],
+                    ['Param', "$fqcnInterface::setter/0"],
+                ],
+                [
+                    ['Param', "$fqcnInterface::setter/0"],
+                    ['Interface', $fqcnOtherInterface],
+                ],
+                [
+                    ['Interface', $fqcnOtherInterface],
+                    ['Method', "$fqcnOtherInterface::simple"],
+                ],
+            ]
+            , $result);
     }
 
     public function testCalling()
@@ -275,18 +275,18 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
 
     public function testFilteringCallWithFineTuning()
     {
-        $conf = array(
-            'calling' => array(
-                'Project\FilterCalling::decorate2' => array(
-                    'ignore' => array(
-                        'Project\OtherClass::getTitle'
-                    )
-                )
-            )
-        );
+        $conf = [
+            'calling' => [
+                'Project\FilterCalling::decorate2' => [
+                    'ignore' => [
+                        'Project\OtherClass::getTitle',
+                    ],
+                ],
+            ],
+        ];
 
         $this->compiler = new Linking(
-                new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
+            new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
 
         $result = $this->testSimpleGraph('FilterIgnoreCallTo.php', 11, 15);
         $impl = $this->findVertex($result, 'ImplVertex', 'Project\FilterCalling::decorate3');
@@ -305,25 +305,25 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
         $fqcnTrait = 'Project\ServiceTrait';
         $result = $this->callParse('ServiceTrait.php', 'ServiceWrong.php');
         $this->assertCount(4, $result->getVertexSet());
-        $this->assertEdges(array(
-            array(
-                array('Class', $fqcnClass),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Class', $fqcnClass),
-                array('Method', "$fqcnClass::someService")
-            ),
-            array(
-                array('Impl', "$fqcnTrait::someService"),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Trait', $fqcnTrait),
-                array('Impl', "$fqcnTrait::someService")
-            )
-                )
-                , $result);
+        $this->assertEdges([
+                [
+                    ['Class', $fqcnClass],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Class', $fqcnClass],
+                    ['Method', "$fqcnClass::someService"],
+                ],
+                [
+                    ['Impl', "$fqcnTrait::someService"],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Trait', $fqcnTrait],
+                    ['Impl', "$fqcnTrait::someService"],
+                ],
+            ]
+            , $result);
     }
 
     public function testTraitWithInterface()
@@ -334,29 +334,29 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->callParse('ServiceTrait.php', 'ServiceRight.php', 'ServiceInterface.php');
         $this->assertCount(5, $result->getVertexSet());
-        $this->assertEdges(array(
-            array(
-                array('Class', $fqcnClass),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Class', $fqcnClass),
-                array('Interface', $fqcnInterface)
-            ),
-            array(
-                array('Interface', $fqcnInterface),
-                array('Method', "$fqcnInterface::someService")
-            ),
-            array(
-                array('Impl', "$fqcnTrait::someService"),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Trait', $fqcnTrait),
-                array('Impl', "$fqcnTrait::someService")
-            )
-                )
-                , $result);
+        $this->assertEdges([
+                [
+                    ['Class', $fqcnClass],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Class', $fqcnClass],
+                    ['Interface', $fqcnInterface],
+                ],
+                [
+                    ['Interface', $fqcnInterface],
+                    ['Method', "$fqcnInterface::someService"],
+                ],
+                [
+                    ['Impl', "$fqcnTrait::someService"],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Trait', $fqcnTrait],
+                    ['Impl', "$fqcnTrait::someService"],
+                ],
+            ]
+            , $result);
     }
 
     /**
@@ -368,21 +368,21 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
         $fqcnTrait = 'Project\ServiceTrait';
         $result = $this->callParse('ServiceTrait.php', 'ServiceUsingTrait.php');
         $this->assertCount(3, $result->getVertexSet());
-        $this->assertEdges(array(
-            array(
-                array('Trait', $fqcnUser),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Impl', "$fqcnTrait::someService"),
-                array('Trait', $fqcnTrait)
-            ),
-            array(
-                array('Trait', $fqcnTrait),
-                array('Impl', "$fqcnTrait::someService")
-            )
-                )
-                , $result);
+        $this->assertEdges([
+                [
+                    ['Trait', $fqcnUser],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Impl', "$fqcnTrait::someService"],
+                    ['Trait', $fqcnTrait],
+                ],
+                [
+                    ['Trait', $fqcnTrait],
+                    ['Impl', "$fqcnTrait::someService"],
+                ],
+            ]
+            , $result);
     }
 
     public function testInternalForTrait()
@@ -418,8 +418,8 @@ class ParseAndGraphTest extends \PHPUnit_Framework_TestCase
             // the edge for static call
             [['Impl', $fqcn . '::staticCall'], ['Method', "$helper::simple"]],
             // the edge for instantiation
-            [['Impl', $fqcn . '::newInstance'], ['Class', $instance]]
-                ], $result);
+            [['Impl', $fqcn . '::newInstance'], ['Class', $instance]],
+        ], $result);
     }
 
 }

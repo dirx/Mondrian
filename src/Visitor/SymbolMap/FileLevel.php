@@ -6,7 +6,7 @@
 
 namespace Trismegiste\Mondrian\Visitor\SymbolMap;
 
-use PhpParser\Node;
+use PhpParser\Node\Stmt;
 use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 
 /**
@@ -15,37 +15,37 @@ use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 class FileLevel extends FileLevelTemplate
 {
 
-    protected function enterClassNode(Node\Stmt\Class_ $node)
+    protected function enterClassNode(Stmt\Class_ $node)
     {
         $fqcn = $this->getNamespacedName($node);
         $this->getReflectionContext()->initClass($fqcn);
         // extends
         if (!is_null($node->extends)) {
-            $name = (string) $this->resolveClassName($node->extends);
+            $name = (string)$this->resolveClassName($node->extends);
             $this->getReflectionContext()->initClass($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }
         // implements
         foreach ($node->implements as $parent) {
-            $name = (string) $this->resolveClassName($parent);
+            $name = (string)$this->resolveClassName($parent);
             $this->getReflectionContext()->initInterface($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }
     }
 
-    protected function enterInterfaceNode(Node\Stmt\Interface_ $node)
+    protected function enterInterfaceNode(Stmt\Interface_ $node)
     {
         $fqcn = $this->getNamespacedName($node);
         $this->getReflectionContext()->initInterface($fqcn);
         // extends
         foreach ($node->extends as $interf) {
-            $name = (string) $this->resolveClassName($interf);
+            $name = (string)$this->resolveClassName($interf);
             $this->getReflectionContext()->initInterface($name);
             $this->getReflectionContext()->pushParentClass($fqcn, $name);
         }
     }
 
-    protected function enterTraitNode(Node\Stmt\Trait_ $node)
+    protected function enterTraitNode(Stmt\Trait_ $node)
     {
         $fqcn = $this->getNamespacedName($node);
         $this->getReflectionContext()->initTrait($fqcn);

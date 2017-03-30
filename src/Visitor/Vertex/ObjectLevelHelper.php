@@ -6,12 +6,12 @@
 
 namespace Trismegiste\Mondrian\Visitor\Vertex;
 
-use Trismegiste\Mondrian\Visitor\State\AbstractObjectLevel;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
-use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ImplVertex;
+use Trismegiste\Mondrian\Transform\Vertex\MethodVertex;
 use Trismegiste\Mondrian\Transform\Vertex\ParamVertex;
+use Trismegiste\Mondrian\Visitor\State\AbstractObjectLevel;
 
 /**
  * ObjectLevelHelper is an helper for common behavior of interface/class/trait
@@ -19,11 +19,23 @@ use Trismegiste\Mondrian\Transform\Vertex\ParamVertex;
 abstract class ObjectLevelHelper extends AbstractObjectLevel
 {
 
+    final public function enter(Node $node)
+    {
+        if (($node->getType() == 'Stmt_ClassMethod') &&
+            $node->isPublic()
+        ) {
+            $fqcn = $this->getCurrentFqcn();
+            $this->enterPublicMethod($fqcn, $node);
+        }
+    }
+
+    abstract protected function enterPublicMethod($fqcn, Stmt\ClassMethod $node);
+
     /**
      * Adding a new vertex if the method is not already indexed
      * Since it is a method, I'm also adding the parameters
      *
-     * @param \PHPParser_Node_Stmt_ClassMethod $node
+     * @param Stmt\ClassMethod $node
      */
     protected function pushMethod(Stmt\ClassMethod $node, $index)
     {
@@ -36,21 +48,6 @@ abstract class ObjectLevelHelper extends AbstractObjectLevel
             foreach ($node->params as $order => $aParam) {
                 $this->pushParameter($index, $order);
             }
-        }
-    }
-
-    /**
-     * Adding a new vertex if the implementation is not already indexed
-     *
-     * @param Stmt\ClassMethod $node
-     */
-    protected function pushImplementation(Stmt\ClassMethod $node, $index)
-    {
-        $dict = $this->getGraphContext();
-        if (!$dict->existsVertex('impl', $index)) {
-            $v = new ImplVertex($index);
-            $this->getGraph()->addVertex($v);
-            $dict->indicesVertex('impl', $index, $v);
         }
     }
 
@@ -74,14 +71,18 @@ abstract class ObjectLevelHelper extends AbstractObjectLevel
         }
     }
 
-    final public function enter(Node $node)
+    /**
+     * Adding a new vertex if the implementation is not already indexed
+     *
+     * @param Stmt\ClassMethod $node
+     */
+    protected function pushImplementation(Stmt\ClassMethod $node, $index)
     {
-        if (($node->getType() == 'Stmt_ClassMethod') &&
-                $node->isPublic()) {
-            $fqcn = $this->getCurrentFqcn();
-            $this->enterPublicMethod($fqcn, $node);
+        $dict = $this->getGraphContext();
+        if (!$dict->existsVertex('impl', $index)) {
+            $v = new ImplVertex($index);
+            $this->getGraph()->addVertex($v);
+            $dict->indicesVertex('impl', $index, $v);
         }
     }
-
-    abstract protected function enterPublicMethod($fqcn, Stmt\ClassMethod $node);
 }

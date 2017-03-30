@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Graph;
 
-use Trismegiste\Mondrian\Graph\Tarjan;
 use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Tarjan;
 use Trismegiste\Mondrian\Graph\Vertex;
 
 /**

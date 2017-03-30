@@ -2,8 +2,8 @@
 
 namespace Trismegiste\Mondrian\Config;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Validator of the configuration of the package
@@ -17,22 +17,22 @@ class Validator implements ConfigurationInterface
         $rootNode = $treeBuilder->root('mondrian');
 
         $rootNode
-                ->children()
-                ->arrayNode('graph')->addDefaultsIfNotSet()
-                ->children()
-                ->arrayNode('calling')
-                ->useAttributeAsKey('callee')
-                ->prototype('array')
-                ->children()
-                ->arrayNode('ignore')
-                ->prototype('scalar')->end()
-                ->end()
-                ->end()
-                ->end()
-                ->end()
-                ->end()
-                ->end()
-                ->end();
+            ->children()
+            ->arrayNode('graph')->addDefaultsIfNotSet()
+            ->children()
+            ->arrayNode('calling')
+            ->useAttributeAsKey('callee')
+            ->prototype('array')
+            ->children()
+            ->arrayNode('ignore')
+            ->prototype('scalar')->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end();
 
         return $treeBuilder;
     }

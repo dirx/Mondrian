@@ -55,13 +55,13 @@ class Json extends GraphExporter
 
         $attr = $v->getAttribute();
 
-        return array('name' => $name, 'type' => $symbolType, 'color' => $attr['color']);
+        return ['name' => $name, 'type' => $symbolType, 'color' => $attr['color']];
     }
 
     public function export()
     {
-        $dump = array();
-        $reversed = array();
+        $dump = [];
+        $reversed = [];
         foreach ($this->graph->getVertexSet() as $k => $vertex) {
             $reversed[get_class($vertex)][$vertex->getName()] = $k;
             $dump['nodes'][] = $this->exportVertex($vertex);
@@ -69,10 +69,10 @@ class Json extends GraphExporter
         foreach ($this->graph->getEdgeSet() as $edge) {
             $v = $edge->getSource();
             $w = $edge->getTarget();
-            $dump['links'][] = array(
+            $dump['links'][] = [
                 'source' => $reversed[get_class($v)][$v->getName()],
-                'target' => $reversed[get_class($w)][$w->getName()]
-            );
+                'target' => $reversed[get_class($w)][$w->getName()],
+            ];
         }
 
         return json_encode($dump);

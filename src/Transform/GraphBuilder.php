@@ -6,10 +6,10 @@
 
 namespace Trismegiste\Mondrian\Transform;
 
-use Trismegiste\Mondrian\Graph\Graph;
-use Trismegiste\Mondrian\Visitor;
 use Trismegiste\Mondrian\Builder\Compiler\AbstractTraverser;
+use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Transform\Logger\LoggerInterface;
+use Trismegiste\Mondrian\Visitor;
 
 /**
  * Design Pattern: Builder
@@ -28,10 +28,10 @@ class GraphBuilder extends AbstractTraverser
 
     /**
      * Injecting the external in/out parameters
-     * 
+     *
      * @param array $cfg
-     * @param \Trismegiste\Mondrian\Graph\Graph $g
-     * @param \Trismegiste\Mondrian\Transform\Logger\LoggerInterface $log
+     * @param Graph $g
+     * @param LoggerInterface $log
      */
     public function __construct(array $cfg, Graph $g, LoggerInterface $log)
     {
@@ -51,16 +51,16 @@ class GraphBuilder extends AbstractTraverser
 
     /**
      * Build a list of visitor for each pass
-     * 
+     *
      * @return FqcnCollector[] list of passes
      */
     public function buildCollectors()
     {
-        return array(
+        return [
             new Visitor\SymbolMap\Collector($this->reflection, $this->vertexContext, $this->graphResult),
             new Visitor\Vertex\Collector($this->reflection, $this->vertexContext, $this->graphResult),
-            new Visitor\Edge\Collector($this->reflection, $this->vertexContext, $this->graphResult)
-        );
+            new Visitor\Edge\Collector($this->reflection, $this->vertexContext, $this->graphResult),
+        ];
     }
 
 }

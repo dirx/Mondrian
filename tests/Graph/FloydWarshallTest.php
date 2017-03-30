@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Graph;
 
-use Trismegiste\Mondrian\Graph\FloydWarshall;
 use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\FloydWarshall;
 use Trismegiste\Mondrian\Graph\Vertex;
 
 /**

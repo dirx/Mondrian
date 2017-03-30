@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Parser;
 
+use PhpParser\Parser;
 use Symfony\Component\Finder\SplFileInfo;
-use PHPParser_Parser;
 
 /**
  * PackageParser is a parser for multiple files
@@ -17,14 +17,14 @@ class PackageParser
 
     protected $fileParser;
 
-    public function __construct(PHPParser_Parser $parser)
+    public function __construct(Parser $parser)
     {
         $this->fileParser = $parser;
     }
 
     public function parse(\Iterator $iter)
     {
-        $node = array();
+        $node = [];
         foreach ($iter as $fch) {
             $node[] = $this->createPhpFileNode($fch);
         }

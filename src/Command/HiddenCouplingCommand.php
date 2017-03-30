@@ -7,9 +7,8 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
-use Symfony\Component\Console\Input\InputOption;
 use Trismegiste\Mondrian\Analysis\HiddenCoupling;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * HiddenCouplingCommand transforms a bunch of php files into a digraph

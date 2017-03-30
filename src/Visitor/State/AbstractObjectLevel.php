@@ -14,7 +14,7 @@ abstract class AbstractObjectLevel extends AbstractState
 
     /**
      * returns the current fqcn of this class|trait|interface
-     * 
+     *
      * @return string
      */
     protected function getCurrentFqcn()

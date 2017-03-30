@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php"
+<phpunit bootstrap="./tests/bootstrap.php"
          colors="false">
 
     <testsuites>
@@ -13,11 +13,5 @@
             <directory>./src</directory>
         </whitelist>
     </filter>
-
-    <logging>
-        <log type="coverage-html" target="doc/coverage" charset="UTF-8"
-             yui="true" highlight="false"
-             lowUpperBound="50" highLowerBound="90"/>
-    </logging>
 
 </phpunit>

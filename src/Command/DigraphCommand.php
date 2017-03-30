@@ -7,8 +7,8 @@
 namespace Trismegiste\Mondrian\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Trismegiste\Mondrian\Graph\Graph;
 use Trismegiste\Mondrian\Analysis\CodeMetrics;
+use Trismegiste\Mondrian\Graph\Graph;
 
 /**
  * DigraphCommand transforms a bunch of php files into a digraph

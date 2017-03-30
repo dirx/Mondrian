@@ -6,8 +6,12 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
-use Trismegiste\Mondrian\Refactor\Refactored;
+use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt;
+use Trismegiste\Mondrian\Parser\PhpFile;
 use Trismegiste\Mondrian\Parser\PhpPersistence;
+use Trismegiste\Mondrian\Refactor\Refactored;
 
 /**
  * InterfaceExtractor builds new contracts
@@ -33,25 +37,25 @@ class InterfaceExtractor extends PublicCollector
     public function beforeTraverse(array $nodes)
     {
         parent::beforeTraverse($nodes);
-        $this->newContent = array();
+        $this->newContent = [];
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function enterClassNode(\PHPParser_Node_Stmt_Class $node)
+    protected function enterClassNode(Stmt\Class_ $node)
     {
         $this->extractAnnotation($node);
         if ($node->hasAttribute('contractor')) {
             $this->newInterface = reset($node->getAttribute('contractor'));
-            $this->methodStack = array();
+            $this->methodStack = [];
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function leaveNode(\PHPParser_Node $node)
+    public function leaveNode(Node $node)
     {
         if ($node->getType() === 'Stmt_Class') {
             if ($this->newInterface) {
@@ -64,31 +68,9 @@ class InterfaceExtractor extends PublicCollector
     }
 
     /**
-     * Build the new PhpFile for the new contract
-     *
-     * @return \Trismegiste\Mondrian\Parser\PhpFile
-     * @throws \RuntimeException If no inside a PhpFile (WAT?)
-     */
-    protected function buildNewInterface()
-    {
-        if (!$this->currentPhpFile) {
-            throw new \RuntimeException('Currently not in a PhpFile therefore no generation');
-        }
-
-        $fqcn = new \PHPParser_Node_Name_FullyQualified($this->currentClass);
-        array_pop($fqcn->parts);
-        $generated[0] = new \PHPParser_Node_Stmt_Namespace(new \PHPParser_Node_Name($fqcn->parts));
-        $generated[1] = new \PHPParser_Node_Stmt_Interface($this->newInterface, array('stmts' => $this->methodStack));
-
-        $dst = dirname($this->currentPhpFile->getRealPath()) . '/' . $this->newInterface . '.php';
-
-        return new \Trismegiste\Mondrian\Parser\PhpFile($dst, $generated, true);
-    }
-
-    /**
      * {@inheritDoc}
      */
-    protected function enterInterfaceNode(\PHPParser_Node_Stmt_Interface $node)
+    protected function enterInterfaceNode(Stmt\Interface_ $node)
     {
 
     }
@@ -96,26 +78,12 @@ class InterfaceExtractor extends PublicCollector
     /**
      * {@inheritDoc}
      */
-    protected function enterPublicMethodNode(\PHPParser_Node_Stmt_ClassMethod $node)
+    protected function enterPublicMethodNode(Stmt\ClassMethod $node)
     {
         // I filter only good relevant methods (no __construct, __clone, __invoke ...)
         if (!preg_match('#^__.+#', $node->name) && $this->newInterface) {
             $this->enterStandardMethod($node);
         }
-    }
-
-    /**
-     * Stacks the method for the new interface
-     *
-     * @param \PHPParser_Node_Stmt_ClassMethod $node
-     */
-    protected function enterStandardMethod(\PHPParser_Node_Stmt_ClassMethod $node)
-    {
-        $abstracted = clone $node;
-        $abstracted->type = 0;
-        $abstracted->stmts = null;
-
-        $this->methodStack[] = $abstracted;
     }
 
     /**
@@ -125,6 +93,50 @@ class InterfaceExtractor extends PublicCollector
     {
         $this->writeUpdated($node);
         $this->writeUpdated($this->newContent);
+    }
+
+    /**
+     * do nothing
+     */
+    protected function enterTraitNode(Stmt\Trait_ $node)
+    {
+
+    }
+
+    /**
+     * Build the new PhpFile for the new contract
+     *
+     * @return PhpFile
+     * @throws \RuntimeException If no inside a PhpFile (WAT?)
+     */
+    protected function buildNewInterface()
+    {
+        if (!$this->currentPhpFile) {
+            throw new \RuntimeException('Currently not in a PhpFile therefore no generation');
+        }
+
+        $fqcn = new Node\Name\FullyQualified($this->currentClass);
+        array_pop($fqcn->parts);
+        $generated[0] = new Stmt\Namespace_(new Name($fqcn->parts));
+        $generated[1] = new Stmt\Interface_($this->newInterface, ['stmts' => $this->methodStack]);
+
+        $dst = dirname($this->currentPhpFile->getRealPath()) . '/' . $this->newInterface . '.php';
+
+        return new PhpFile($dst, $generated, true);
+    }
+
+    /**
+     * Stacks the method for the new interface
+     *
+     * @param Stmt\ClassMethod $node
+     */
+    protected function enterStandardMethod(Stmt\ClassMethod $node)
+    {
+        $abstracted = clone $node;
+        $abstracted->type = 0;
+        $abstracted->stmts = null;
+
+        $this->methodStack[] = $abstracted;
     }
 
     /**
@@ -140,13 +152,4 @@ class InterfaceExtractor extends PublicCollector
             }
         }
     }
-
-    /**
-     * do nothing
-     */
-    protected function enterTraitNode(\PHPParser_Node_Stmt_Trait $node)
-    {
-        
-    }
-
 }

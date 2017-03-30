@@ -13,7 +13,7 @@ use Trismegiste\Mondrian\Graph\Graph;
  *
  * Responsible for maintaining a list of methods, traits, classes and interfaces used
  * for building inheritance links in a digraph
- * 
+ *
  * @todo this class lacks an interface
  */
 class ReflectionContext
@@ -24,7 +24,7 @@ class ReflectionContext
     const SYMBOL_CLASS = 'c';
 
     /**
-     *  @var $inheritanceMap array the symbol map 
+     * @var $inheritanceMap array the symbol map
      */
     protected $inheritanceMap;
 
@@ -40,7 +40,7 @@ class ReflectionContext
      */
     public function __construct()
     {
-        $this->inheritanceMap = array();
+        $this->inheritanceMap = [];
         $this->symbolTypes = [self::SYMBOL_CLASS, self::SYMBOL_INTERFACE, self::SYMBOL_TRAIT];
     }
 
@@ -160,8 +160,8 @@ class ReflectionContext
 
         if (!array_key_exists($name, $this->inheritanceMap)) {
             $this->inheritanceMap[$name]['type'] = $symbolType;
-            $this->inheritanceMap[$name]['parent'] = array();
-            $this->inheritanceMap[$name]['method'] = array();
+            $this->inheritanceMap[$name]['parent'] = [];
+            $this->inheritanceMap[$name]['method'] = [];
             $this->inheritanceMap[$name]['use'] = [];
         }
     }
@@ -236,10 +236,10 @@ class ReflectionContext
 
     /**
      * Returns a list of all classes using a trait for declaring a given method
-     *  
+     *
      * @param string $fqcn FQCN of trait
      * @param string $methodName the imported method
-     * 
+     *
      * @return array
      */
     public function getClassesUsingTraitForDeclaringMethod($fqcn, $methodName)

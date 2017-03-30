@@ -26,11 +26,11 @@ class Svg extends Graphviz
     {
         $this->checkGraphviz();
 
-        $descriptorspec = array(
-            0 => array("pipe", "r"), // stdin is a pipe
-            1 => array("pipe", "w"), // stdout is a pipe
-            2 => array("pipe", "a") // stderr is also a pipe
-        );
+        $descriptorspec = [
+            0 => ["pipe", "r"], // stdin is a pipe
+            1 => ["pipe", "w"], // stdout is a pipe
+            2 => ["pipe", "a"] // stderr is also a pipe
+        ];
 
         $process = proc_open('dot -Tsvg', $descriptorspec, $pipes);
 

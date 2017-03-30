@@ -6,18 +6,20 @@
 
 namespace Trismegiste\Mondrian\Visitor;
 
-use PHPParser_NodeVisitorAbstract;
-use PHPParser_Node;
-use PHPParser_Error;
+use PhpParser\Error;
+use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * FqcnHelper is an helper for resolving FQCN for Class/Interface/Param
  */
-class FqcnHelper extends PHPParser_NodeVisitorAbstract
+class FqcnHelper extends NodeVisitorAbstract
 {
 
     /**
-     * @var null|PHPParser_Node_Name Current namespace
+     * @var null|Name Current namespace
      */
     protected $namespace;
 
@@ -35,10 +37,10 @@ class FqcnHelper extends PHPParser_NodeVisitorAbstract
     {
         // if the visitor is used without PhpFile nodes
         $this->namespace = null;
-        $this->aliases = array();
+        $this->aliases = [];
     }
 
-    public function enterNode(PHPParser_Node $node)
+    public function enterNode(Node $node)
     {
 
         switch ($node->getType()) {
@@ -47,20 +49,20 @@ class FqcnHelper extends PHPParser_NodeVisitorAbstract
                 $this->currentPhpFile = $node;
                 // resetting the tracking of namespace and alias if we enter in a new file
                 $this->namespace = null;
-                $this->aliases = array();
+                $this->aliases = [];
                 break;
 
             case 'Stmt_Namespace' :
                 $this->namespace = $node->name;
-                $this->aliases = array();
+                $this->aliases = [];
                 break;
 
             case 'Stmt_UseUse' :
                 if (isset($this->aliases[$node->alias])) {
-                    throw new PHPParser_Error(
-                    sprintf(
+                    throw new Error(
+                        sprintf(
                             'Cannot use "%s" as "%s" because the name is already in use', $node->name, $node->alias
-                    ), $node->getLine()
+                        ), $node->getLine()
                     );
                 }
                 $this->aliases[$node->alias] = $node->name;
@@ -71,14 +73,15 @@ class FqcnHelper extends PHPParser_NodeVisitorAbstract
     /**
      * resolve the Name with current namespace and alias
      *
-     * @param \PHPParser_Node_Name $src
-     * @return \PHPParser_Node_Name|\PHPParser_Node_Name_FullyQualified
+     * @param Name $src
+     *
+     * @return Name|FullyQualified
      */
-    protected function resolveClassName(\PHPParser_Node_Name $src)
+    protected function resolveClassName(Name $src)
     {
         $name = clone $src;
         // don't resolve special class names
-        if (in_array((string) $name, array('self', 'parent', 'static'))) {
+        if (in_array((string)$name, ['self', 'parent', 'static'])) {
             return $name;
         }
 
@@ -89,31 +92,31 @@ class FqcnHelper extends PHPParser_NodeVisitorAbstract
 
         // resolve aliases (for non-relative names)
         if (!$name->isRelative() && isset($this->aliases[$name->getFirst()])) {
-            $name->setFirst($this->aliases[$name->getFirst()]);
             // if no alias exists prepend current namespace
+            return FullyQualified::concat($this->aliases[$name->getFirst()], $name->slice(1));
         } elseif (null !== $this->namespace) {
-            $name->prepend($this->namespace);
+            return FullyQualified::concat($this->namespace, $src);
         }
 
-        return new \PHPParser_Node_Name_FullyQualified($name->parts, $name->getAttributes());
+        return $name;
     }
 
     /**
      * Helper : get the FQCN of the given $node->name
      *
-     * @param PHPParser_Node $node
+     * @param Node $node
+     *
      * @return string
      */
-    protected function getNamespacedName(PHPParser_Node $node)
+    protected function getNamespacedName(Node $node)
     {
         if (null !== $this->namespace) {
-            $namespacedName = clone $this->namespace;
-            $namespacedName->append($node->name);
+            $namespacedName = FullyQualified::concat($this->namespace, $node->name);
         } else {
             $namespacedName = $node->name;
         }
 
-        return (string) $namespacedName;
+        return (string)$namespacedName;
     }
 
 }

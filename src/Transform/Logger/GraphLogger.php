@@ -12,7 +12,7 @@ namespace Trismegiste\Mondrian\Transform\Logger;
 class GraphLogger implements LoggerInterface
 {
 
-    protected $stack = array();
+    protected $stack = [];
 
     /**
      * {@inheritdoc}
@@ -24,25 +24,25 @@ class GraphLogger implements LoggerInterface
 
     protected function getCallingDigest()
     {
-        $report = array();
+        $report = [];
         ksort($this->stack);
         foreach ($this->stack as $callee => $calledLst) {
             $calledLst = array_keys($calledLst);
             sort($calledLst);
-            $report[$callee] = array('ignore' => $calledLst);
+            $report[$callee] = ['ignore' => $calledLst];
         }
 
-        return array('calling' => $report);
+        return ['calling' => $report];
     }
 
     /**
      * Get the yml config
-     * 
+     *
      * @return string the yaml-formatted full report
      */
     public function getDigest()
     {
-        return array('graph' => $this->getCallingDigest());
+        return ['graph' => $this->getCallingDigest()];
     }
 
 }

@@ -44,6 +44,9 @@ class Algorithm implements Graph
         $this->graph->addVertex($v);
     }
 
+    /**
+     * @return Edge[]
+     */
     public function getEdgeSet()
     {
         return $this->graph->getEdgeSet();

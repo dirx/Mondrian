@@ -6,12 +6,12 @@
 
 namespace Trismegiste\Mondrian\Tests\Transform;
 
-use Trismegiste\Mondrian\Graph\Graph;
 use Symfony\Component\Finder\Finder;
-use Trismegiste\Mondrian\Graph\Digraph;
 use Trismegiste\Mondrian\Builder\Linking;
-use Trismegiste\Mondrian\Transform\GraphBuilder;
 use Trismegiste\Mondrian\Builder\Statement\Builder;
+use Trismegiste\Mondrian\Graph\Digraph;
+use Trismegiste\Mondrian\Graph\Graph;
+use Trismegiste\Mondrian\Transform\GraphBuilder;
 use Trismegiste\Mondrian\Transform\Logger\NullLogger;
 
 /**
@@ -25,11 +25,11 @@ class FullGraphTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $conf = array('calling' => array());
+        $conf = ['calling' => []];
 
         $this->graph = new Digraph();
         $this->compiler = new Linking(
-                new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
+            new Builder(), new GraphBuilder($conf, $this->graph, new NullLogger()));
     }
 
     protected function findVertex(Graph $g, $type, $name)

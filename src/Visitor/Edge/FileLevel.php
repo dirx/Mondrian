@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Visitor\Edge;
 
-use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 use PhpParser\Node\Stmt;
+use Trismegiste\Mondrian\Visitor\State\FileLevelTemplate;
 
 /**
  * FileLevel is ...
@@ -22,13 +22,13 @@ class FileLevel extends FileLevelTemplate
 
         // extends
         if (!is_null($node->extends)) {
-            if (null !== $dst = $this->findVertex('class', (string) $this->resolveClassName($node->extends))) {
+            if (null !== $dst = $this->findVertex('class', (string)$this->resolveClassName($node->extends))) {
                 $this->getGraph()->addEdge($src, $dst);
             }
         }
         // implements
         foreach ($node->implements as $interf) {
-            if (null !== $dst = $this->findVertex('interface', (string) $this->resolveClassName($interf))) {
+            if (null !== $dst = $this->findVertex('interface', (string)$this->resolveClassName($interf))) {
                 $this->getGraph()->addEdge($src, $dst);
             }
         }
@@ -41,7 +41,7 @@ class FileLevel extends FileLevelTemplate
 
         // implements
         foreach ($node->extends as $interf) {
-            if (null !== $dst = $this->findVertex('interface', (string) $this->resolveClassName($interf))) {
+            if (null !== $dst = $this->findVertex('interface', (string)$this->resolveClassName($interf))) {
                 $this->getGraph()->addEdge($src, $dst);
             }
         }
@@ -51,5 +51,4 @@ class FileLevel extends FileLevelTemplate
     {
         // no edge to create
     }
-
 }

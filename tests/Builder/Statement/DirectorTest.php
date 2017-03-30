@@ -6,6 +6,7 @@
 
 namespace Trismegiste\Mondrian\Tests\Builder\Statement;
 
+use Trismegiste\Mondrian\Builder\Statement\BuilderInterface;
 use Trismegiste\Mondrian\Builder\Statement\Director;
 
 /**
@@ -21,26 +22,26 @@ class DirectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->builder = $this->getMock('Trismegiste\Mondrian\Builder\Statement\BuilderInterface');
+        $this->builder = $this->createMock(BuilderInterface::class);
         $this->director = new Director($this->builder);
     }
 
     public function testBuilding()
     {
         $this->builder
-                ->expects($this->once())
-                ->method('buildLexer');
+            ->expects($this->once())
+            ->method('buildLexer');
         $this->builder
-                ->expects($this->once())
-                ->method('buildFileLevel');
+            ->expects($this->once())
+            ->method('buildFileLevel');
         $this->builder
-                ->expects($this->once())
-                ->method('buildPackageLevel');
+            ->expects($this->once())
+            ->method('buildPackageLevel');
         $this->builder
-                ->expects($this->once())
-                ->method('getParsed');
+            ->expects($this->once())
+            ->method('getParsed');
 
-        $this->director->parse($this->getMock('Iterator'));
+        $this->director->parse($this->createMock('Iterator'));
     }
 
 }

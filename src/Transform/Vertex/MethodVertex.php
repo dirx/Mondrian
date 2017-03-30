@@ -18,8 +18,8 @@ class MethodVertex extends StaticAnalysis
         // and since there can be false positive on calls with same
         // name, adding the name can be more confusing
         preg_match('#([^:]+)$#', $this->name, $capt);
-        $default = array('shape' => 'triangle', 'style' => 'filled',
-            'color' => 'yellow', 'label' => $capt[1]);
+        $default = ['shape' => 'triangle', 'style' => 'filled',
+            'color' => 'yellow', 'label' => $capt[1]];
 
         return $default;
     }

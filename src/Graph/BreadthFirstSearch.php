@@ -17,11 +17,11 @@ namespace Trismegiste\Mondrian\Graph;
 class BreadthFirstSearch extends Algorithm
 {
 
-    protected $stack = array();
+    protected $stack = [];
 
     public function searchPath(Vertex $src, Vertex $dst)
     {
-        $this->stack = array();
+        $this->stack = [];
         $start = new \SplObjectStorage();
         $step = $this->graph->getEdgeIterator($src);
         foreach ($step as $succ) {

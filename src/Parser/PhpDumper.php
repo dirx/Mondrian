@@ -15,12 +15,14 @@ class PhpDumper extends PhpPersistence
     /**
      * Write the file
      *
-     * @param \Trismegiste\Mondrian\Parser\PhpFile $aFile
+     * @param PhpFile $aFile
      */
     public function write(PhpFile $aFile)
     {
-        file_put_contents($aFile->getRealPath(), "<?php\n\n"
-                . $this->prettyPrinter->prettyPrint(iterator_to_array($aFile->getIterator())));
+        file_put_contents(
+            $aFile->getRealPath(),
+            "<?php\n\n" . $this->prettyPrinter->prettyPrint($aFile->stmts)
+        );
     }
 
 }

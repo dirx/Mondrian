@@ -24,7 +24,7 @@ class RefactoredTest extends \PHPUnit_Framework_TestCase
 
     public function testPushNewContract()
     {
-        $this->assertAttributeEquals(array('Glass' => 'Prison'), 'newContract', $this->content);
+        $this->assertAttributeEquals(['Glass' => 'Prison'], 'newContract', $this->content);
     }
 
     public function testHasNewContract()
@@ -38,7 +38,7 @@ class RefactoredTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testNameCollision()
     {

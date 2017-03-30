@@ -35,9 +35,9 @@ class Tarjan extends Algorithm
      */
     public function getStronglyConnected()
     {
-        $this->stack = array();
+        $this->stack = [];
         $this->index = 0;
-        $this->partition = array();
+        $this->partition = [];
 
         foreach ($this->getVertexSet() as $v) {
             if (!isset($v->index)) {
@@ -60,15 +60,15 @@ class Tarjan extends Algorithm
             if (!isset($w->index)) {
                 // Successor w has not yet been visited; recurse on it
                 $this->recursivStrongConnect($w);
-                $v->lowLink = min(array($v->lowLink, $w->lowLink));
+                $v->lowLink = min([$v->lowLink, $w->lowLink]);
             } elseif (in_array($w, $this->stack)) {
                 // Successor w is in stack S and hence in the current SCC
-                $v->lowLink = min(array($v->lowLink, $w->index));
+                $v->lowLink = min([$v->lowLink, $w->index]);
             }
         }
         // If v is a root node, pop the stack and generate an SCC
         if ($v->lowLink === $v->index) {
-            $scc = array();
+            $scc = [];
             do {
                 $w = array_pop($this->stack);
                 array_push($scc, $w);

@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Mondrian\Tests\Command;
 
-use Trismegiste\Mondrian\Command\FactoryGenerator;
 use Symfony\Component\Console\Tester\CommandTester;
+use Trismegiste\Mondrian\Command\FactoryGenerator;
 
 /**
  * FactoryGeneratorTest tests the command factory generator
@@ -24,11 +24,11 @@ class FactoryGeneratorTest extends RefactorTestCase
     {
         $command = $this->application->find($this->cmdName);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'file' => __DIR__ . '/../Fixtures/Refact/ForFactory.php',
-            '--dry' => true
-        ));
+            '--dry' => true,
+        ]);
     }
 
 }
