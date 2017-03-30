@@ -147,6 +147,10 @@ class CytoscapeJs extends GraphExporter
 
     protected function getShortNamespace($namespace)
     {
+        if (empty($namespace)) {
+            return '';
+        }
+
         $ns = explode('\\', $namespace);
         $prefix = '';
         foreach ($ns as $item) {
@@ -172,7 +176,7 @@ class CytoscapeJs extends GraphExporter
             'grey' => 'gray',
         ];
 
-        return isset($cytoscapeColors[$color]) ? isset($cytoscapeColors[$color]) : $color;
+        return isset($cytoscapeColors[$color]) ? $cytoscapeColors[$color] : $color;
     }
 
     protected function mapToCytoscapeShape($shape)
