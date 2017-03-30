@@ -39,7 +39,7 @@ abstract class FileLevelTemplate extends AbstractState
                 break;
 
             case 'Stmt_UseUse' :
-                if (isset($this->aliases[$node->alias]) && $this->aliases[$node->alias] !== $node->name) {
+                if (isset($this->aliases[$node->alias])) {
                     throw new Error(
                         sprintf(
                             'Cannot use "%s" as "%s" because the name is already in use as %s',
@@ -66,6 +66,19 @@ abstract class FileLevelTemplate extends AbstractState
             case 'Stmt_Interface':
                 $this->context->pushState('interface', $node);
                 $this->enterInterfaceNode($node);
+                break;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function leave(Node $node)
+    {
+        switch ($node->getType()) {
+            case 'PhpFile':
+                $this->namespace = null;
+                $this->aliases = [];
                 break;
         }
     }
