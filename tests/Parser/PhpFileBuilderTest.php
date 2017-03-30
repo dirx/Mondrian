@@ -37,9 +37,8 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $file = $this->builder->addUse('Nice')->addUse('Sprites')->getNode();
         $using = $file->stmts;
-        $this->assertEquals('', (string)$using[0]->name);
-        $this->assertEquals('Nice', (string)$using[1]->uses[0]->name);
-        $this->assertEquals('Sprites', (string)$using[2]->uses[0]->name);
+        $this->assertEquals('Nice', (string)$using[0]->uses[0]->name);
+        $this->assertEquals('Sprites', (string)$using[1]->uses[0]->name);
     }
 
     public function testClass()
@@ -47,8 +46,8 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
         $file = $this->builder
             ->declaring(new Class_('Scary'))
             ->getNode();
-        $using = $file->stmts;
-        $this->assertEquals('Scary', (string)$using[1]->name);
+        $cls = current($file->stmts);
+        $this->assertEquals('Scary', (string)$cls->name);
     }
 
     public function testOnlyOneClass()
@@ -57,8 +56,8 @@ class PhpFileBuilderTest extends \PHPUnit_Framework_TestCase
             ->declaring(new Class_('Scary'))
             ->declaring(new Class_('Monsters'))
             ->getNode();
-        $using = $file->stmts;
-        $this->assertEquals('Monsters', (string)$using[1]->name);
+        $cls = current($file->stmts);
+        $this->assertEquals('Monsters', (string)$cls->name);
     }
 
     /**

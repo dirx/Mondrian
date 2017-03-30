@@ -38,10 +38,8 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $stmt);
         $this->assertInstanceOf(PhpFile::class, $stmt[0]);
         $content = new \ArrayIterator($stmt[0]->stmts);
-        $this->assertCount(2, $content);
+        $this->assertCount(1, $content);
         $content->rewind();
-        $this->assertEquals('Stmt_Namespace', $content->current()->getType());
-        $content->next();
         $this->assertEquals('Stmt_Class', $content->current()->getType());
         $this->assertEquals('abc', $content->current()->name);
     }
